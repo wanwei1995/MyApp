@@ -3,4 +3,18 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+
+
+    <!--tab-->
+    <color name="config_color_light_blue">#299EE3</color>
+    <color name="tab_background">#FFFFFF</color>
+    <color name="dark_phone">#E3E6EA</color>
+
+
+
+
+    <!--基础颜色-->
+    <color name="white_color">#FFFFFF</color>
+    <color name="gray_color">#99A0AA</color>
 </resources>
