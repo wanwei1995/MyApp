@@ -16,11 +16,16 @@
 
 
 
+    <color name="error">#D81B60</color>
+    <color name="success">#03A9F4</color>
+
 
     <!--基础颜色-->
     <color name="white_color">#FFFFFF</color>
     <color name="gray_color">#99A0AA</color>
+    <color name="gray2_color">#BABFC7</color>
     <color name="green">#CDDC39</color>
     <color name="purple">#C89EC4</color>
     <color name="purple2">#F8CAF4</color>
+    <color name="purple3">#F3DBF1</color>
 </resources>

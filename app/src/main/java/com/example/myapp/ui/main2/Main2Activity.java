@@ -2,8 +2,11 @@ package com.example.myapp.ui.main2;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,8 @@ import com.example.myapp.util.PackageUtils;
 import com.example.myapp.util.ResUtils;
 import com.google.android.material.navigation.NavigationView;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class Main2Activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
@@ -28,6 +33,8 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
     private NavigationView nav_view;
     private TextView tv_nav_title;
     private FragmentManager mFgManager;
+
+    private Boolean isExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,5 +96,35 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         //关闭右侧菜单栏
         drawer_layout.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    //返回按钮重写
+
+    /**
+     * 双击返回键退出
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(drawer_layout.isDrawerOpen(GravityCompat.START)){
+                drawer_layout.closeDrawer(GravityCompat.START);
+            }
+            if (isExit) {
+                //按两次退出
+                finish();
+            } else {
+                isExit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isExit = false;
+                    }
+                }, 2000);
+            }
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

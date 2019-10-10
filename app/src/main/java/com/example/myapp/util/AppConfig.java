@@ -8,6 +8,8 @@ public class AppConfig {
 
 	public static final String LOVE_PHONE = "lovePhone";
 
+	public static final String ENVIRONMENT = "environment";
+
 	public static final String LOVE_PIC = "lovePic";
 
 	public static final String CONFIG_FILE = "settings";
@@ -42,6 +44,10 @@ public class AppConfig {
 
 	public static String getLovePic(){
 		return get(LOVE_PIC);
+	}
+
+	public static String getEnvironment(){
+		return get(ENVIRONMENT);
 	}
 
 }
