@@ -1,0 +1,7 @@
+[
+  {
+    "text": "二次理货",
+    "icon": "icon_tally",
+    "targetActivity": "Other.SecondTallyActivity"
+  }
+]

@@ -30,11 +30,14 @@ public class CustomApplication extends Application {
         this.configurationMap = configurationMap;
     }
 
+    private static CustomApplication context;
+
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         //崩溃日志显示
         SpiderMan.getInstance()
                 .init(this)
@@ -49,5 +52,10 @@ public class CustomApplication extends Application {
                         //CrashModel 崩溃信息记录，包含设备信息
                     }
                 });
+        AppContext.init(this);
+    }
+
+    public static CustomApplication getContext() {
+        return context;
     }
 }
