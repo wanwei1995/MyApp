@@ -1,11 +1,8 @@
 package com.example.myapp.ui.main;
 
 import android.os.Bundle;
-import android.widget.FrameLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.myView.MyScrollView;

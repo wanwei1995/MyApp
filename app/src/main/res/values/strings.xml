@@ -20,18 +20,28 @@
     <string name="menu_my">我</string>
     <string name="menu_pet">宠物</string>
 
+    <string name="menu_tools">小工具箱</string>
+    <string name="menu_tools_zxing">二维码工具</string>
+
+
     <string name="menu_see">看看</string>
     <string name="menu_see_news">读书看报</string>
 
     <string name="menu_use">用用</string>
     <string name="menu_use_check_weather">查查天气</string>
     <string name="menu_use_check_subway">查查地铁</string>
-    <string name="menu_use_tools">小工具箱</string>
+
 
     <string name="menu_else">其他</string>
     <string name="menu_else_setting">设置</string>
     <string name="menu_else_about">关于</string>
     <string name="menu_zwll_version">ZWLL: %1$s</string>
+
+
+    <string name="button_copy">复制</string>
+
+
+
 
     <!-- Working -->
     <string name="working">前方正在施工&#8230;</string>

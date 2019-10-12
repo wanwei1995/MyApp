@@ -85,11 +85,13 @@ public class Global {
         return null;
     }
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final int REQUEST_EXTERNAL_CAMERA = 2;
+    public static final int REQUEST_EXTERNAL_CALL_PHONE = 3;
+    public static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private static String[] PERMISSTIONS_CAMERA = {
+    public static String[] PERMISSTIONS_CAMERA = {
             Manifest.permission.CAMERA,
             Manifest.permission.VIBRATE
     };
@@ -100,8 +102,8 @@ public class Global {
     };
 
     public static void verifyAllPermissions(Activity activity){
-        verifyStoragePermissions(activity);
         verifyCameraPermissions(activity);
+        verifyStoragePermissions(activity);
         verifyCallPhonePermissions(activity);
     }
 
@@ -119,7 +121,7 @@ public class Global {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSTIONS_CAMERA, REQUEST_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(activity, PERMISSTIONS_CAMERA, REQUEST_EXTERNAL_CAMERA);
         }
     }
 
@@ -127,7 +129,7 @@ public class Global {
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE);
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSTIONS_CALL, REQUEST_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(activity, PERMISSTIONS_CALL, REQUEST_EXTERNAL_CALL_PHONE);
         }
     }
 }

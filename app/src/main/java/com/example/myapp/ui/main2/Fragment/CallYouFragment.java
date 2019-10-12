@@ -22,18 +22,20 @@ import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
+import com.example.myapp.myView.ShapedImageView;
 import com.example.myapp.util.AppConfig;
 import com.example.myapp.util.BitmapUtil;
 import com.example.myapp.util.RealPathFromUriUtils;
 import com.example.myapp.util.StringUtil;
 
-public class CallYouFragment extends Fragment implements View.OnClickListener {
+public class CallYouFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.addImage)
     ImageButton addImage;
     @BindView(R.id.image)
-    ImageButton image;
+    ShapedImageView image;
     @BindView(R.id.phone)
     TextView phoneTv;
     private FragmentActivity mContext;
@@ -55,8 +57,6 @@ public class CallYouFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.call_you)
     ImageButton callYou;
 
-    Unbinder unbinder;
-
     private String lovePhone = "";
 
     public static CallYouFragment newInstance() {
@@ -74,7 +74,7 @@ public class CallYouFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_call_you, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        butterKnife(view);
         callYou.setOnClickListener(this);
         addImage.setOnClickListener(this);
         image.setOnClickListener(this);

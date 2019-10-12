@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.myapp.R;
 import com.example.myapp.ui.main2.Fragment.CallYouFragment;
 import com.example.myapp.ui.main2.Fragment.DefaultFragment;
+import com.example.myapp.ui.main2.Fragment.ZxingFragment;
 import com.example.myapp.ui.main2.constant.MenuConstant;
 import com.example.myapp.util.Global;
 import com.example.myapp.util.PackageUtils;
@@ -41,7 +42,6 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         mFgManager = getSupportFragmentManager();
-        Global.verifyAllPermissions(this);
         initView();
         initData();
     }
@@ -87,6 +87,13 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                     toolbar.setTitle(ResUtils.getString(R.string.menu_call_you));
                 }
                 break;
+            case R.id.nav_zxing:
+                if (mFgManager.findFragmentByTag(MenuConstant.ZXING) == null) {
+                    mFgManager.beginTransaction().replace(R.id.cly_main_content,
+                            ZxingFragment.newInstance(), MenuConstant.ZXING).commit();
+                    toolbar.setTitle(ResUtils.getString(R.string.menu_tools_zxing));
+                }
+                break;
 
             default:
                 toolbar.setTitle("施工中...");
@@ -109,11 +116,13 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if(drawer_layout.isDrawerOpen(GravityCompat.START)){
                 drawer_layout.closeDrawer(GravityCompat.START);
+                return true;
             }
             if (isExit) {
                 //按两次退出
                 finish();
             } else {
+                Toast.makeText(this, "再返回一次退出", LENGTH_SHORT).show();
                 isExit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override

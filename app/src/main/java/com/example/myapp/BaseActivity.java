@@ -69,8 +69,6 @@ public class BaseActivity extends AbstractActivity {
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
 
-        hideInputBoard();
-
         loadSound();
 
         mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);

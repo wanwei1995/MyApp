@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ScrollView;
 
 /**
- * @author wanwei
+ * @author 根据滑动方向及距离 添加事件控制
  * @TODO
  * @date: 2019/6/26 17:10
  */

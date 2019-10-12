@@ -22,6 +22,15 @@
         </menu>
     </item>
 
+    <item android:title="@string/menu_tools">
+        <menu>
+            <item
+                    android:id="@+id/nav_zxing"
+                    android:icon="@mipmap/icon_zxing"
+                    android:title="@string/menu_tools_zxing" />
+        </menu>
+    </item>
+
     <item android:title="@string/menu_else" >
         <menu>
             <item

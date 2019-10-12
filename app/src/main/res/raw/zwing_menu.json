@@ -1,0 +1,11 @@
+[
+  {
+    "name": "生成二维码",
+    "icon": "icon_zxing",
+    "activity": "CreateZxingActivity"
+  },
+  {
+    "name": "图片识别",
+    "icon": "icon_read"
+  }
+]
