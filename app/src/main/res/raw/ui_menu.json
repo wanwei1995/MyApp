@@ -1,0 +1,44 @@
+[
+  {
+    "name": "进度条",
+    "icon": "icon_progress_bar",
+    "activity": "ProgressBarActivity"
+  },
+  {
+    "name": "切换开关",
+    "icon": "icon_switch",
+    "activity": "SwitchActivity"
+  },
+  {
+    "name": "拖动条",
+    "icon": "icon_seek_bar",
+    "activity": "SeekBarActivity"
+  },
+  {
+    "name": "时间",
+    "icon": "icon_time",
+    "activity": "TimeActivity"
+  },
+  {
+    "name": "异步线程",
+    "icon": "icon_async",
+    "activity": "AsyncActivity"
+  },
+  {
+    "code": "save_pic",
+    "name": "图片",
+    "icon": "icon_pic"
+  },
+  {
+    "code": "see_pic",
+    "name": "查看图片",
+    "icon": "icon_find",
+    "activity": "SeeActivity",
+    "lock": "1"
+  },
+  {
+    "name": "添加手势",
+    "icon": "icon_gesture",
+    "activity": "AddGestureActivity"
+  }
+]

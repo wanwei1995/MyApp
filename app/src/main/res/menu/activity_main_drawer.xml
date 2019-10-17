@@ -22,6 +22,16 @@
         </menu>
     </item>
 
+    <item android:title="@string/menu_eating">
+        <menu>
+            <item
+                    android:id="@+id/nav_cookbook"
+                    android:icon="@mipmap/icon_food_book"
+                    android:title="@string/menu_eating_cookbook" />
+        </menu>
+    </item>
+
+
     <item android:title="@string/menu_tools">
         <menu>
             <item

@@ -85,6 +85,8 @@ public class Global {
         return null;
     }
 
+    public static final int OPEN_ALBUM = 1;
+
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
     public static final int REQUEST_EXTERNAL_CAMERA = 2;
     public static final int REQUEST_EXTERNAL_CALL_PHONE = 3;

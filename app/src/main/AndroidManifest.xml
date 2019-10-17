@@ -28,6 +28,24 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".ui.main.activity.AddGestureActivity">
+        </activity>
+        <activity android:name=".ui.GestureActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.BigPicActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.SeeActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.AsyncActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.TimeActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.SeekBarActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.SwitchActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.ProgressBarActivity">
+        </activity>
         <activity android:name=".ui.main2.activity.CreateZxingActivity">
         </activity>
         <activity android:name=".ui.FirstActivity">

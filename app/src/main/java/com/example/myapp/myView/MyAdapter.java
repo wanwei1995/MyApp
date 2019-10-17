@@ -1,6 +1,8 @@
 package com.example.myapp.myView;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,6 +178,29 @@ public abstract class MyAdapter<T> extends BaseAdapter {
             }
             return this;
         }
+
+        /**
+         * 设置图片
+         */
+        public ViewHolder setImageBackground(int id, Drawable drawable) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                ((ImageView) view).setBackground(drawable);
+            }
+            return this;
+        }
+
+        /**
+         * 设置图片
+         */
+        public ViewHolder setImageBitmap(int id, Bitmap bitmap) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                ((ImageView) view).setImageBitmap(bitmap);
+            }
+            return this;
+        }
+
 
 
         /**

@@ -25,6 +25,7 @@ import com.uuzuche.lib_zxing.activity.CodeUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 
+// 带"."的文件夹是android默认的隐藏文件夹
 public class CreateZxingActivity extends BaseActivity{
 
     @BindView(R.id.info)
@@ -61,18 +62,24 @@ public class CreateZxingActivity extends BaseActivity{
                 AlertDialogUtil.YesOrNo("是否保存到本地", CreateZxingActivity.this, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        FileOutputStream out = null;
                         try {
-                            File file = FileUtil.createPhotoPath("family", info);
-                            FileOutputStream out = new FileOutputStream(file);
+                            File file = FileUtil.createPhotoPath(FileUtil.FAMILY, info);
+                            out = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
                             //保存图片后发送广播通知更新数据库
                             Uri uri = Uri.fromFile(file);
                             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-                            out.flush();
-                            out.close();
                             Toast.makeText(CreateZxingActivity.this, "已保存到手机，请到相册查看", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             e.printStackTrace();
+                        } finally {
+                            try {
+                                out.flush();
+                                out.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
 
 

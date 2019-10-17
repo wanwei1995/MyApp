@@ -62,38 +62,9 @@ public class ZxingFragment extends BaseFragment{
         View view = inflater.inflate(R.layout.fragment_zxing, container, false);
         butterKnife(view);
 
-        List<MenuDto> menuDTOs = loadMenus();
+        List<MenuDto> menuDTOs = loadMenus(R.raw.zwing_menu);
         renderMenus(menuDTOs);
         return view;
-    }
-
-
-    private List<MenuDto> loadMenus() {
-        InputStreamReader inputReader = new InputStreamReader(getResources().openRawResource(R.raw.zwing_menu));
-        BufferedReader bufReader = new BufferedReader(inputReader);
-        String line = "";
-        String jsonStr = "";
-        List<MenuDto> menuDTOs = new ArrayList<>();
-        try {
-            while ((line = bufReader.readLine()) != null)
-                jsonStr += line;
-            menuDTOs = new Gson().fromJson(jsonStr, new TypeToken<List<MenuDto>>() {
-            }.getType());
-        } catch (IOException e) {
-            Log.e("normal", "parseJson", e);
-
-            Toast.makeText(mContext, "Render Main Menu Eror", Toast.LENGTH_SHORT).show();
-        } finally {
-            try {
-                inputReader.close();
-                bufReader.close();
-            } catch (IOException e) {
-                Log.e("normal", "parseJson", e);
-
-                Toast.makeText(mContext, "Render Main Menu Eror", Toast.LENGTH_SHORT).show();
-            }
-        }
-        return menuDTOs;
     }
 
     private void renderMenus(List<MenuDto> menuDTOs) {
@@ -146,11 +117,6 @@ public class ZxingFragment extends BaseFragment{
         /**
          * 选择系统图片并解析
          */
-
-
-
-
-
         if (requestCode == OPEN_ALBUM) {
             if (data != null) {
                 Uri uri = data.getData();

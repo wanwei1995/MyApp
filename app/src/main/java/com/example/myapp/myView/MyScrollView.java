@@ -60,4 +60,9 @@ public class MyScrollView extends ScrollView {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    @Override
+    public void fling(int velocityY) {
+        super.fling(velocityY / 2);    //滑动速度变为原来的一半
+    }
+
 }

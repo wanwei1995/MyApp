@@ -84,7 +84,7 @@ public class CallYouFragment extends BaseFragment implements View.OnClickListene
         String picUrl = AppConfig.getLovePic();
         if (StringUtil.isNotEmpty(picUrl)) {
             addImage.setVisibility(View.GONE);
-            image.setImageBitmap(BitmapUtil.changePic(picUrl));
+            image.setImageBitmap(BitmapUtil.changeAndDigreePic(picUrl));
         }
         return view;
     }
@@ -170,7 +170,7 @@ public class CallYouFragment extends BaseFragment implements View.OnClickListene
                 String picUrl = RealPathFromUriUtils.getRealPathFromUri(mContext, data.getData());
                 AppConfig.set(AppConfig.LOVE_PIC, picUrl);
                 //相册返回
-                image.setImageBitmap(BitmapUtil.changePic(picUrl));
+                image.setImageBitmap(BitmapUtil.changeAndDigreePic(picUrl));
                 addImage.setVisibility(View.GONE);
         }
         super.onActivityResult(requestCode, resultCode, data);

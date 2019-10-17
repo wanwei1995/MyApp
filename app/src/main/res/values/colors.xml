@@ -10,7 +10,7 @@
     <color name="config_color_light_blue">#299EE3</color>
     <color name="tab_background">#FFFFFF</color>
     <color name="dark_phone">#E3E6EA</color>
-    <color name="bar_font">#474747</color>
+    <color name="bar_font">#0E0D0D</color>
 
     <color name="success_stroke_color">#FAEEEE</color>
 
@@ -21,8 +21,10 @@
 
 
     <!--基础颜色-->
+    <color name="black_color">#0E0D0D</color>
     <color name="white_color">#FFFFFF</color>
     <color name="gray_color">#99A0AA</color>
+    <color name="blue_color">#0268FA</color>
     <color name="gray2_color">#BABFC7</color>
     <color name="green">#CDDC39</color>
     <color name="purple">#C89EC4</color>

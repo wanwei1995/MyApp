@@ -7,14 +7,15 @@ import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.myView.MyScrollView;
 import com.example.myapp.ui.main.Fragment.MainFragment;
+import com.example.myapp.ui.main.Fragment.UiFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.youth.banner.Banner;
 
 public class MainActivity extends BaseActivity {
 
-    public final static String TAG_FIRST= "0";
-    public final static String TAG_SECOND= "1";
-    public final static String TAG_THIRD= "2";
+    public final static String TAG_FIRST = "0";
+    public final static String TAG_SECOND = "1";
+    public final static String TAG_THIRD = "2";
 
     @BindView(R.id.banner)
     Banner banner;
@@ -38,22 +39,22 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
         mFgManager.beginTransaction().replace(R.id.fragment_container,
-                MainFragment.newInstance()).commit();
+                UiFragment.newInstance()).commit();
     }
 
     private void initTab() {
-        TabLayout.Tab component = tabs.newTab();
-        component.setText("一页");
-        //component.setIcon(R.mipmap.icon_main);
-        tabs.addTab(component);
-
         TabLayout.Tab util = tabs.newTab();
-        util.setText("二页");
+        util.setText("UI控件测试");
         //util.setIcon(R.mipmap.icon_other);
         tabs.addTab(util);
 
+        TabLayout.Tab component = tabs.newTab();
+        component.setText("POST接口测试");
+        //component.setIcon(R.mipmap.icon_main);
+        tabs.addTab(component);
+
         TabLayout.Tab expand = tabs.newTab();
-        expand.setText("三页");
+        expand.setText("其他");
         //expand.setIcon(R.mipmap.icon_tool);
         tabs.addTab(expand);
 
@@ -64,7 +65,7 @@ public class MainActivity extends BaseActivity {
                 switch (tab.getPosition()) {
                     case 0:
                         mFgManager.beginTransaction().replace(R.id.fragment_container,
-                                MainFragment.newInstance(), TAG_FIRST).commit();
+                                UiFragment.newInstance(), TAG_FIRST).commit();
                         break;
                     case 1:
                         mFgManager.beginTransaction().replace(R.id.fragment_container,

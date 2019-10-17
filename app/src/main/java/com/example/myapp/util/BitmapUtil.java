@@ -12,7 +12,7 @@ public class BitmapUtil {
 
 
     //旋转图片
-    public static Bitmap changePic(String filePath) {
+    public static Bitmap changeAndDigreePic(String filePath) {
 
         //根据图片的filepath获取到一个ExifInterface的对象
         ExifInterface exif = null;
@@ -56,6 +56,73 @@ public class BitmapUtil {
                     bitmap.getHeight(), m, true);
         }
         return bitmap;
+    }
+
+    //旋转图片
+    public static Bitmap changePic(String filePath) {
+
+        //根据图片的filepath获取到一个ExifInterface的对象
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            exif = null;
+        }
+
+        int digree = 0;
+        if (exif != null) {
+            // 读取图片中相机方向信息
+            int ori = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            // 计算旋转角度
+            switch (ori) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    digree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    digree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    digree = 270;
+                    break;
+                default:
+                    digree = 0;
+                    break;
+            }
+
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath,getBitmapOption(1));
+
+        if (digree != 0) {
+            // 旋转图片
+            Matrix m = new Matrix();
+            m.postRotate(digree);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                    bitmap.getHeight(), m, true);
+        }
+        return bitmap;
+    }
+
+    //旋转图片
+    public static Bitmap getBitmap(String filePath) {
+        return BitmapFactory.decodeFile(filePath,getBitmapOption(1));
+    }
+
+    public static Bitmap setImgSize(Bitmap bm, int newWidth ,int newHeight) {
+        // 获得图片的宽高.
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例.
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // 取得想要缩放的matrix参数.
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+        // 得到新的图片.
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
     }
 
 
@@ -108,14 +175,54 @@ public class BitmapUtil {
     public static Bitmap compressImage(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        int options = 90;
-        while (baos.toByteArray().length / 1024 > 100) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        int options = 10;
+        if (baos.toByteArray().length / 1024 > 100) { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
             baos.reset(); // 重置baos即清空baos
             image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
-            options -= 10;// 每次都减少10
         }
         ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
         Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
         return bitmap;
+    }
+
+
+
+    public static Bitmap cropBitmap(Bitmap bitmap) {//从中间截取一个正方形
+        int w = bitmap.getWidth(); // 得到图片的宽，高
+        int h = bitmap.getHeight();
+        int cropWidth = w >= h ? h : w;// 裁切后所取的正方形区域边长
+
+        return Bitmap.createBitmap(bitmap, (bitmap.getWidth() - cropWidth) / 2,
+                (bitmap.getHeight() - cropWidth) / 2, cropWidth, cropWidth);
+    }
+
+    public static Bitmap getCircleBitmap(Bitmap bitmap) {//把图片裁剪成圆形
+        if (bitmap == null) {
+            return null;
+        }
+        bitmap = cropBitmap(bitmap);//裁剪成正方形
+        try {
+            Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+                    bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(circleBitmap);
+            final Paint paint = new Paint();
+            final Rect rect = new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight());
+            final RectF rectF = new RectF(new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight()));
+            float roundPx = 0.0f;
+            roundPx = bitmap.getWidth();
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(Color.WHITE);
+            canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            final Rect src = new Rect(0, 0, bitmap.getWidth(),
+                    bitmap.getHeight());
+            canvas.drawBitmap(bitmap, src, rect, paint);
+            return circleBitmap;
+        } catch (Exception e) {
+            return bitmap;
+        }
     }
 }

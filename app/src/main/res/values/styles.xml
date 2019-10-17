@@ -18,6 +18,10 @@
         <item name="android:textColor">@color/gray_color</item>
     </style>
 
+    <style name="TextText" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/bar_font</item>
+    </style>
+
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="actionMenuTextColor">@color/bar_font</item>
         <item name="android:textSize">18sp</item>

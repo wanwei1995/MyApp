@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -15,6 +16,7 @@ import com.example.myapp.R;
 import com.example.myapp.ui.main.MainActivity;
 import com.example.myapp.ui.main2.Main2Activity;
 import com.example.myapp.util.AppConfig;
+import com.example.myapp.util.CheckPermissionUtils;
 import com.example.myapp.util.Global;
 import com.example.myapp.util.StringUtil;
 
@@ -32,7 +34,12 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         ButterKnife.bind(this);
-        Global.verifyStoragePermissions(this);
+        //检查权限
+        String[] permissions = CheckPermissionUtils.checkPermission(this);
+        if (permissions.length != 0) {
+            //申请权限
+            ActivityCompat.requestPermissions(this, permissions, 100);
+        }
 
         if (StringUtil.isNotEmpty(AppConfig.getEnvironment()) && "1".equals(AppConfig.getEnvironment())) {
             Intent intent2 = new Intent(FirstActivity.this, Main2Activity.class);
@@ -57,21 +64,5 @@ public class FirstActivity extends AppCompatActivity {
                 startActivity(intent2);
                 break;
         }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case Global.REQUEST_EXTERNAL_STORAGE:
-                Global.verifyCameraPermissions(this);
-                break;
-            case Global.REQUEST_EXTERNAL_CAMERA:
-                Global.verifyCallPhonePermissions(this);
-                break;
-        }
-
-
     }
 }
