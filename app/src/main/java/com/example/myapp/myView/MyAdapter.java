@@ -1,5 +1,6 @@
 package com.example.myapp.myView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import com.bumptech.glide.Glide;
 import com.example.myapp.R;
 
 import java.util.ArrayList;
@@ -197,6 +200,16 @@ public abstract class MyAdapter<T> extends BaseAdapter {
             View view = getView(id);
             if (view instanceof ImageView) {
                 ((ImageView) view).setImageBitmap(bitmap);
+            }
+            return this;
+        }
+
+        public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                Glide.with(activity)
+                        .load(url)
+                        .into((ImageView)view);
             }
             return this;
         }

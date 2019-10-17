@@ -8,10 +8,9 @@
         android:background="@color/black_color"
         tools:context=".ui.main.activity.SeeActivity">
 
+    <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                               android:layout_height="match_parent"
+                                               android:id="@+id/pic_view">
 
-    <GridView android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/pic_view"
-              android:numColumns="3">
-    </GridView>
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

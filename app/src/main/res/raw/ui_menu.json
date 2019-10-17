@@ -31,8 +31,8 @@
   },
   {
     "code": "see_pic",
-    "name": "查看图片",
-    "icon": "icon_find",
+    "name": "手势验证",
+    "icon": "icon_gesture2",
     "activity": "SeeActivity",
     "lock": "1"
   },

@@ -1,5 +1,6 @@
 package com.example.myapp.myView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.myapp.R;
 
 import java.util.ArrayList;
@@ -204,6 +206,18 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
             }
             return this;
         }
+
+
+        public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                Glide.with(activity)
+                        .load(url)
+                        .into((ImageView)view);
+            }
+            return this;
+        }
+
 
 
 

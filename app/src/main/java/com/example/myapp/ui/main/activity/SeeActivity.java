@@ -1,6 +1,8 @@
 package com.example.myapp.ui.main.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -12,13 +14,18 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
 import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.myView.MyAdapter;
+import com.example.myapp.myView.MyLayoutAdapter;
 import com.example.myapp.ui.main.dto.ImageDto;
 import com.example.myapp.ui.main2.dto.MenuDto;
+import com.example.myapp.util.AlertDialogUtil;
 import com.example.myapp.util.BitmapUtil;
 import com.example.myapp.util.FileUtil;
 import com.example.myapp.util.ImageUtil;
@@ -30,16 +37,16 @@ import java.util.List;
 public class SeeActivity extends BaseActivity {
 
     @BindView(R.id.pic_view)
-    GridView picView;
+    RecyclerView picView;
 
-    private BaseAdapter mAdapter = null;
+    private MyLayoutAdapter myLayoutAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see);
 
-        List<ImageDto> imageDtos = new ArrayList<>();
+        List<String> imageDtos = new ArrayList<>();
         File file;
         try{
             file = FileUtil.getAppImagePath(FileUtil.PRIVATE1,true);
@@ -49,32 +56,23 @@ public class SeeActivity extends BaseActivity {
         }
         File[] files = file.listFiles();
         for(File fileSon :files){
-            ImageDto imageDto = new ImageDto();
-            imageDto.setUrl(fileSon.getPath());
-            imageDtos.add(imageDto);
+            imageDtos.add(fileSon.getPath());
         }
-        mAdapter = new MyAdapter<ImageDto>(imageDtos, R.layout.item_grid_view) {
 
+        myLayoutAdapter = new MyLayoutAdapter<String>(imageDtos, R.layout.item_grid_view) {
             @Override
-            public void bindView(ViewHolder holder, ImageDto obj) {
-                if(obj.getBitmap() == null){
-                    obj.setBitmap(BitmapUtil.getBitmap(obj.getUrl()));
-                }
-                holder.setImageBitmap(R.id.img_icon,BitmapUtil.cropBitmap(obj.getBitmap()));
+            public void reBindViewHolder(ViewHolder holder, int position, List<String> mData) {
+                holder.setImageBitmap(SeeActivity.this,R.id.img_icon, mData.get(position));
             }
         };
-
-        picView.setAdapter(mAdapter);
-
-        picView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ImageDto imageDto = imageDtos.get(i);
+            public void onItemClick(View view, int position) {
                 try {
                     //跳转至对应页面
                     Intent intent = new Intent(SeeActivity.this, BigPicActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("url",imageDto.getUrl());
+                    bundle.putString("url",imageDtos.get(position));
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } catch (Exception e) {
@@ -82,5 +80,7 @@ public class SeeActivity extends BaseActivity {
                 }
             }
         });
+        picView.setLayoutManager(new GridLayoutManager(this, 4));
+        picView.setAdapter(myLayoutAdapter);
     }
 }
