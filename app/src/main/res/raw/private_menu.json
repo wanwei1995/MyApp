@@ -1,0 +1,12 @@
+[
+  {
+    "name": "查看相册",
+    "icon": "icon_see",
+    "activity": "FolderActivity"
+  },
+  {
+    "code": "save_pic",
+    "name": "转移",
+    "icon": "icon_move"
+  }
+]

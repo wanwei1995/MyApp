@@ -17,6 +17,7 @@ public class DateUtils {
     // 建议用下面的格式常量
     public static final String Y_M_D = "yyyy-MM-dd";
     public static final String Y_M_D_HM = "yyyy-MM-dd HH:mm";
+    public static final String M_D_HM = "MM-dd HH:mm";
     public static final String Y_M_D_HMS = "yyyy-MM-dd HH:mm:ss";
     public static final String YMD = "yyyyMMdd";
     public static final String YMDHM = "yyyyMMddHHmm";

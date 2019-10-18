@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.example.myapp.R;
 import com.example.myapp.ui.main2.Fragment.CallYouFragment;
+import com.example.myapp.ui.main2.Fragment.CookingFragment;
 import com.example.myapp.ui.main2.Fragment.DefaultFragment;
 import com.example.myapp.ui.main2.Fragment.ZxingFragment;
 import com.example.myapp.ui.main2.constant.MenuConstant;
@@ -92,6 +93,13 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                     mFgManager.beginTransaction().replace(R.id.cly_main_content,
                             ZxingFragment.newInstance(), MenuConstant.ZXING).commit();
                     toolbar.setTitle(ResUtils.getString(R.string.menu_tools_zxing));
+                }
+                break;
+            case R.id.nav_cookbook:
+                if (mFgManager.findFragmentByTag(MenuConstant.COOKING) == null) {
+                    mFgManager.beginTransaction().replace(R.id.cly_main_content,
+                            CookingFragment.newInstance(), MenuConstant.COOKING).commit();
+                    toolbar.setTitle(ResUtils.getString(R.string.menu_eating));
                 }
                 break;
 

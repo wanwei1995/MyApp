@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +22,8 @@ import com.example.myapp.myView.MyAdapter;
 import com.example.myapp.ui.main2.dto.MenuDto;
 import com.example.myapp.util.Global;
 import com.example.myapp.util.ImageUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -25,15 +25,9 @@
     "activity": "AsyncActivity"
   },
   {
-    "code": "save_pic",
-    "name": "图片",
-    "icon": "icon_pic"
-  },
-  {
-    "code": "see_pic",
     "name": "手势验证",
     "icon": "icon_gesture2",
-    "activity": "SeeActivity",
+    "activity": "GestureActivity",
     "lock": "1"
   },
   {

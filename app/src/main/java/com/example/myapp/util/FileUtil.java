@@ -31,12 +31,20 @@ public class FileUtil {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/ZWLL/";
     }
 
+
+    public static String getPrivate(){
+        return "."+ PRIVATE1;
+    }
+
+    public static String getAllPrivate(){
+        return getSystemUrl()+"."+ PRIVATE1;
+    }
     public static File makeGesture() {
         return new File(getSystemUrl(), MYGESTURE);
     }
 
     public static String getGesture() {
-        return getSystemUrl() + "/" + MYGESTURE;
+        return getSystemUrl() + MYGESTURE;
     }
 
     public static File createPhotoPath(String path, String fileName) throws IOException {
@@ -48,22 +56,22 @@ public class FileUtil {
         //带"."的文件夹是android默认的隐藏文件夹
         if (isPrivate) {
             path = "." + path;
-            format = ".private";
+            format += ".private";
         }
         String folder = createFolders(getSystemUrl(), path);
         if (ERROR.equals(folder)) {
             throw new IOException("文件夹创建失败.");
         }
         String uuid = UUID.randomUUID().toString();
-        File file = new File(folder + File.separator + fileName + "-" + DateUtils.getFormatDateTime(DateUtils.getNowTime(), DateUtils.YMDHMS) + "-" + uuid + format);
+        File file = new File(folder + File.separator + fileName + "-" + DateUtils.getFormatDateTime(DateUtils.getNowTime(), DateUtils.M_D_HM) + "-" + uuid + format);
         file.createNewFile();
         return file;
     }
 
-    public static File getAppImagePath(String path, Boolean isPrivate) throws IOException {
-        String folder = getSystemUrl() + "/" + path;
+    public static File getAppImagePath(String path, Boolean isPrivate) {
+        String folder = getSystemUrl() + path;
         if (isPrivate) {
-            folder = getSystemUrl() + "/" + "." + path;
+            folder = getSystemUrl()+ "." + path;
         }
         return new File(folder);
     }
@@ -101,6 +109,36 @@ public class FileUtil {
             txts = ERROR;
         }
         return txts;
+    }
+
+    /**
+     * 多级目录创建
+     *
+     */
+    public static String createAppFolder(String paths,Boolean isPrivate) {
+        String folder = getSystemUrl() + paths;
+        if (isPrivate) {
+            folder = getSystemUrl() + "." + paths;
+        }
+        String txt = folder;
+        try {
+            java.io.File myFilePath = new java.io.File(txt);
+            txt = folder;
+            if (!myFilePath.exists()) {
+                myFilePath.mkdirs();
+            }
+        } catch (Exception e) {
+            txt = ERROR;
+        }
+        return txt;
+    }
+
+    /**
+     * 多级目录创建
+     *
+     */
+    public static String createAppFolder(String paths) {
+        return createAppFolder(paths,false);
     }
 
     /**

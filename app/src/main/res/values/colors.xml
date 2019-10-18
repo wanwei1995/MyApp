@@ -26,8 +26,10 @@
     <color name="gray_color">#99A0AA</color>
     <color name="blue_color">#0268FA</color>
     <color name="gray2_color">#BABFC7</color>
+    <color name="gray3_color">#CFD2D8</color>
     <color name="green">#CDDC39</color>
     <color name="purple">#C89EC4</color>
     <color name="purple2">#F8CAF4</color>
     <color name="purple3">#F3DBF1</color>
+    <color name="folder">#379782</color>
 </resources>

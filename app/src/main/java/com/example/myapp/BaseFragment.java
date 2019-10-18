@@ -36,11 +36,6 @@ public class BaseFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
     }
 
-
-
-
-
-
     public List<MenuDto> loadMenus(int id) {
         InputStreamReader inputReader = new InputStreamReader(getResources().openRawResource(id));
         BufferedReader bufReader = new BufferedReader(inputReader);

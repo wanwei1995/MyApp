@@ -1,4 +1,4 @@
-package com.example.myapp.ui;
+package com.example.myapp.ui.main.activity;
 
 import android.content.Intent;
 import android.gesture.*;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.util.FileUtil;
@@ -53,17 +52,15 @@ public class GestureActivity extends BaseActivity {
                 ArrayList<String> result = new ArrayList<String>();
                 //遍历所有找到的Prediction对象
                 for (Prediction pred : predictions) {
-                    if (pred.score > 2.0) {
+                    if (pred.score > 4.0) {
                         result.add(pred.name);
                     }
                 }
-                if (result.contains(code)) {
+                if (result.contains("see_pic")) {
                     //进入对应页面
                     try {
                         //跳转至对应页面
-                        Intent intent = new Intent(GestureActivity.this, Class.forName(activity));
-                        Bundle bundle = new Bundle();
-                        intent.putExtras(bundle);
+                        Intent intent = new Intent(GestureActivity.this, PrivateActivity.class);
                         startActivity(intent);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
 import com.example.myapp.util.RestUtil;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -18,18 +19,12 @@ import cz.msebera.android.httpclient.Header;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainFragment extends Fragment implements View.OnClickListener{
+public class MainFragment extends BaseFragment implements View.OnClickListener{
 
     @BindView(R.id.button1)
     Button button1;
     @BindView(R.id.resp_msg)
     EditText respMsg;
-
-    Unbinder unbinder;
-
-    public MainFragment() {
-        // Required empty public constructor
-    }
 
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
@@ -46,7 +41,7 @@ public class MainFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        butterKnife(view);
         button1.setOnClickListener(this);
         return view;
     }

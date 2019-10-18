@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.myapp">
-
     <!-- 打电话的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE"/>
 
@@ -29,6 +28,11 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".ui.main.activity.PrivateActivity">
+        </activity>
+        <activity android:name=".ui.main.activity.FolderActivity">
+        </activity>
+
         <meta-data
                 android:name="com.google.android.actions"
                 android:resource="@xml/file_paths_public"/>
@@ -45,7 +49,7 @@
 
         <activity android:name=".ui.main.activity.AddGestureActivity">
         </activity>
-        <activity android:name=".ui.GestureActivity">
+        <activity android:name=".ui.main.activity.GestureActivity">
         </activity>
         <activity android:name=".ui.main.activity.BigPicActivity">
         </activity>

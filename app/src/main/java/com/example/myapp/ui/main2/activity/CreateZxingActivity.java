@@ -42,10 +42,7 @@ public class CreateZxingActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_create_zxing);
-
-        ButterKnife.bind(this);
 
         zxingImage.setOnLongClickListener(new View.OnLongClickListener() {
 

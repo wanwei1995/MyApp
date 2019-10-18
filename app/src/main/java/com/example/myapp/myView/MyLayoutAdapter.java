@@ -74,6 +74,12 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
         notifyDataSetChanged();
     }
 
+    public void reSet(T data){
+
+
+
+    }
+
     //往特定位置，添加一个元素
     public void add(int position, T data) {
         if (mData == null) {

@@ -5,12 +5,23 @@ import android.app.Service;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import butterknife.ButterKnife;
+import com.example.myapp.ui.main2.dto.MenuDto;
 import com.example.myapp.util.AppManager;
 import com.example.myapp.util.sound.Sound;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseActivity extends AbstractActivity {
 
@@ -85,5 +96,33 @@ public class BaseActivity extends AbstractActivity {
             mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
         }
         mVibrator.vibrate(500);
+    }
+
+    public List<MenuDto> loadMenus(int id) {
+        InputStreamReader inputReader = new InputStreamReader(getResources().openRawResource(id));
+        BufferedReader bufReader = new BufferedReader(inputReader);
+        String line = "";
+        String jsonStr = "";
+        List<MenuDto> menuDTOs = new ArrayList<>();
+        try {
+            while ((line = bufReader.readLine()) != null)
+                jsonStr += line;
+            menuDTOs = new Gson().fromJson(jsonStr, new TypeToken<List<MenuDto>>() {
+            }.getType());
+        } catch (IOException e) {
+            Log.e("normal", "parseJson", e);
+
+            Toast.makeText(this, "Render Main Menu Eror", Toast.LENGTH_SHORT).show();
+        } finally {
+            try {
+                inputReader.close();
+                bufReader.close();
+            } catch (IOException e) {
+                Log.e("normal", "parseJson", e);
+
+                Toast.makeText(this, "Render Main Menu Eror", Toast.LENGTH_SHORT).show();
+            }
+        }
+        return menuDTOs;
     }
 }
