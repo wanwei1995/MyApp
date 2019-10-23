@@ -95,6 +95,7 @@ public class DateUtils {
         return date;
     }
 
+
     public static Date formatStringToDate(String dateStr, String format) {
         if (dateStr == null || dateStr.trim().length() < 1) {
             return null;

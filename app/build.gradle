@@ -64,4 +64,6 @@ dependencies {
     implementation 'com.zhihu.android:matisse:0.5.3-beta2'
     //大图显示
     implementation 'com.github.SherlockGougou:BigImageViewPager:v4_4.1.0'
+    //下拉刷新
+    implementation 'com.ufo:DWRefreshLayout:0.9.6'
 }

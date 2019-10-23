@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+
     <!-- 去掉默认导航栏 -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

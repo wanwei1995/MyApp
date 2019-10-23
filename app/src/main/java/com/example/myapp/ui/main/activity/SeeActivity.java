@@ -2,38 +2,31 @@ package com.example.myapp.ui.main.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.gesture.Gesture;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.shinichi.library.ImagePreview;
-import cc.shinichi.library.bean.ImageInfo;
 import cc.shinichi.library.view.listener.OnBigImageClickListener;
 import cc.shinichi.library.view.listener.OnBigImageLongClickListener;
 import cc.shinichi.library.view.listener.OnBigImagePageChangeListener;
 import cc.shinichi.library.view.listener.OnOriginProgressListener;
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
-import com.example.myapp.myView.MyAdapter;
 import com.example.myapp.myView.MyLayoutAdapter;
-import com.example.myapp.ui.main.dto.ImageDto;
-import com.example.myapp.ui.main2.dto.MenuDto;
 import com.example.myapp.util.AlertDialogUtil;
-import com.example.myapp.util.BitmapUtil;
 import com.example.myapp.util.FileUtil;
-import com.example.myapp.util.ImageUtil;
+import com.example.myapp.util.GlideUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,17 +50,24 @@ public class SeeActivity extends BaseActivity {
 
     @BindView(R.id.pic_view)
     RecyclerView picView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private MyLayoutAdapter myLayoutAdapter;
+
+    private List<String> imageDtos;
+
+    private int showType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_see);
 
+
         String folder = getIntent().getExtras().getString("folder");
 
-        List<String> imageDtos = new ArrayList<>();
+        imageDtos = new ArrayList<>();
         File file = new File(folder);
 
         File[] files = file.listFiles();
@@ -75,13 +75,34 @@ public class SeeActivity extends BaseActivity {
             imageDtos.add(fileSon.getPath());
         }
 
+        RequestOptions options = GlideUtil.getCircle(R.mipmap.icon_loading_girl).override(260, 260);
+        show(options);
+    }
 
+    private void show(RequestOptions options) {
         myLayoutAdapter = new MyLayoutAdapter<String>(imageDtos, R.layout.item_grid_view) {
             @Override
             public void reBindViewHolder(ViewHolder holder, int position, List<String> mData) {
-                holder.setImageBitmap(SeeActivity.this, R.id.img_icon, mData.get(position));
+                holder.setImageBitmap(SeeActivity.this, R.id.img_icon, mData.get(position), options);
             }
         };
+        myLayoutAdapter.setOnItemLongClickListener(new MyLayoutAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //长按删除
+                AlertDialogUtil.YesOrNo("请确定是否删除图片", SeeActivity.this, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //删除图片
+                        String path = imageDtos.get(position);
+                        FileUtil.deletePicture(path, SeeActivity.this);
+                        //刷新列表
+                        myLayoutAdapter.remove(position);
+                    }
+                });
+            }
+        });
+
         myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -194,41 +215,39 @@ public class SeeActivity extends BaseActivity {
                                 Log.d(TAG, "finish: ");
                             }
                         })
-
-                        // 使用自定义百分比样式，传入自己的布局，并设置回调，再根据parentView找到进度控件进行百分比的设置：
-                        //.setProgressLayoutId(R.layout.image_progress_layout_theme_1, new OnOriginProgressListener() {
-                        //    @Override public void progress(View parentView, int progress) {
-                        //        Log.d(TAG, "progress: " + progress);
-                        //
-                        //        ProgressBar progressBar = parentView.findViewById(R.id.progress_horizontal);
-                        //        progressBar.setProgress(progress);
-                        //    }
-                        //
-                        //    @Override public void finish(View parentView) {
-                        //        Log.d(TAG, "finish: ");
-                        //    }
-                        //})
-                        //=================================================================================================
-
                         // 开启预览
                         .start();
             }
-
-      /*  try {
-                    //跳转至对应页面
-                    Intent intent = new Intent(SeeActivity.this, BigPicActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("url",imageDtos.get(position));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
         });
 
         picView.setLayoutManager(new GridLayoutManager(this, 4));
         picView.setAdapter(myLayoutAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_cart://监听菜单按钮
+                switch (showType) {
+                    case 0:
+                        showType =1;
+                        show(GlideUtil.getCrop(R.mipmap.icon_loading_girl).override(260, 260));
+                        break;
+                    case 1:
+                        showType =0;
+                        show(GlideUtil.getCircle(R.mipmap.icon_loading_girl).override(260, 260));
+                        break;
+
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

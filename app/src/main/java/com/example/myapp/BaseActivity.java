@@ -1,8 +1,11 @@
 package com.example.myapp;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -10,12 +13,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import butterknife.ButterKnife;
+import com.example.myapp.glide.GlideLoadEngine;
 import com.example.myapp.ui.main2.dto.MenuDto;
 import com.example.myapp.util.AppManager;
+import com.example.myapp.util.Global;
 import com.example.myapp.util.sound.Sound;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -88,6 +98,7 @@ public class BaseActivity extends AbstractActivity {
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+        initActionBar();
     }
 
     public void mVibrator(){
@@ -124,5 +135,37 @@ public class BaseActivity extends AbstractActivity {
             }
         }
         return menuDTOs;
+    }
+
+    public void initActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(toolbar != null){
+            setSupportActionBar(toolbar);
+        }
+    }
+
+    public void openPic(int max) {
+        //打开相册，选择图片并保存
+        //进入相册选择图片
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            requestPermissions(Global.PERMISSTIONS_CAMERA, Global.REQUEST_EXTERNAL_STORAGE);
+        } else {
+
+            Matisse.from(this)
+                    .choose(MimeType.ofImage())
+                    .capture(true)
+                    .captureStrategy(new CaptureStrategy(true, "cc.shinichi.bigimageviewpager.fileprovider"))
+                    .countable(true)
+                    .maxSelectable(max)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(new GlideLoadEngine())
+                    .theme(com.zhihu.matisse.R.style.Matisse_Zhihu)
+                    .showSingleMediaType(true)
+                    .originalEnable(true)
+                    .forResult(Global.OPEN_ALBUM);
+        }
     }
 }

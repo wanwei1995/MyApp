@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.main2.cooking.AddFoodBookActivity">
+
+    <com.example.myapp.myView.SimpleToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryDark"
+            android:fitsSystemWindows="true"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp">
+
+        <TextView
+                android:id="@+id/txt_left_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="返回"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:visibility="visible"/>
+
+        <TextView
+                android:id="@+id/txt_main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:text="标题"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:visibility="visible"/>
+
+        <TextView
+                android:id="@+id/txt_right_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:text="保存"
+                android:gravity="center"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:visibility="visible"/>
+    </com.example.myapp.myView.SimpleToolbar>
+
+
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="200dp"
+               android:src="@mipmap/icon_add3"
+               android:layout_gravity="center"
+               android:background="@color/gray4_color"
+               android:id="@+id/add_image"/>
+
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:layout_gravity="center"
+              android:textSize="30dp"
+              android:textColor="@color/bar_font"
+              android:id="@+id/food_name"
+              android:hint="菜谱名"/>
+
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:textSize="20dp"
+              android:background="@null"
+              android:layout_marginTop="15dp"
+              android:id="@+id/food_introduction"
+              android:hint="请为此菜做个简单介绍吧"/>
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="30dp"
+              android:textSize="25dp"
+              android:text="用料"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:text="暂无"/>
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:textSize="25dp"
+              android:text="做法"/>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:text="暂无"/>
+
+
+
+</LinearLayout>

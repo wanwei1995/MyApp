@@ -21,16 +21,19 @@ public class FileUtil {
 
     public static final String PRIVATE1 = "bb";
 
+    public static final String FOODBOOK = "foodbook";
+
     public static final String MYGESTURE = "mygesture";
 
 
 
     private static final String ERROR = "error";
 
+
+
     public static String getSystemUrl() {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/ZWLL/";
     }
-
 
     public static String getPrivate(){
         return "."+ PRIVATE1;
@@ -189,6 +192,56 @@ public class FileUtil {
                     file.delete();
                 }
             }
+        }
+    }
+
+
+
+    /**
+     * 递归删除文件和文件夹
+     *
+     * @param file
+     *            要删除的根目录
+     */
+    public static void recursionDeleteFile(File file) {
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] childFile = file.listFiles();
+            if (childFile == null || childFile.length == 0) {
+                file.delete();
+                return;
+            }
+            for (File f : childFile) {
+                recursionDeleteFile(f);
+            }
+            file.delete();
+        }
+    }
+
+    /**
+     * 递归删除文件和文件夹
+     *
+     *            要删除的根目录
+     */
+    public static void recursionDeleteFile(String filePath) {
+        File file = new File(filePath);
+        if (file.isFile()) {
+            file.delete();
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] childFile = file.listFiles();
+            if (childFile == null || childFile.length == 0) {
+                file.delete();
+                return;
+            }
+            for (File f : childFile) {
+                recursionDeleteFile(f);
+            }
+            file.delete();
         }
     }
 }

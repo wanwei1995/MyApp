@@ -4,13 +4,35 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".ui.main2.cooking.FoodBookFragment">
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:id="@+id/goods_list">
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+        <com.ufo.dwrefresh.view.DWRefreshLayout
+                android:id="@+id/dwRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/goods_list">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </com.ufo.dwrefresh.view.DWRefreshLayout>
+
+
+        <ImageButton android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@mipmap/icon_add2"
+                     android:background="#00000000"
+                     android:layout_marginLeft="300dp"
+                     android:layout_marginTop="550dp"
+                     android:id="@+id/add"/>
+
+    </RelativeLayout>
+
 
 </FrameLayout>

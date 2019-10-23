@@ -22,8 +22,6 @@ public class CookingFragment extends BaseFragment {
 
     @BindView(R.id.fragment_container)
     FrameLayout fragmentContainer;
-    @BindView(R.id.srcoll)
-    MyScrollView srcoll;
     @BindView(R.id.tabs)
     TabLayout tabs;
 

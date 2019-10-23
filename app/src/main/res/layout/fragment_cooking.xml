@@ -11,13 +11,6 @@
                   android:layout_height="match_parent"
                   android:orientation="vertical">
 
-
-        <com.example.myapp.myView.MyScrollView
-                android:id="@+id/srcoll"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
             <FrameLayout
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
@@ -25,8 +18,6 @@
                     android:layout_weight="1">
 
             </FrameLayout>
-        </com.example.myapp.myView.MyScrollView>
-
 
         <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"

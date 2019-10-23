@@ -14,7 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myapp.R;
+import com.example.myapp.util.GlideUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +25,12 @@ import java.util.List;
 /**
  * Created by Jay on 2015/9/22 0022.
  */
-public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAdapter.ViewHolder> implements View.OnClickListener{
+public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAdapter.ViewHolder> implements View.OnClickListener,View.OnLongClickListener{
 
     private List<T> mData;
     private int mLayoutRes;           //布局id
     private OnItemClickListener mOnItemClickListener = null;
+    private OnItemLongClickListener mOnItemLongClickListener = null;
 
     public MyLayoutAdapter(List<T> mData, int mLayoutRes) {
         this.mData = mData;
@@ -49,9 +53,28 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
         void onItemClick(View view , int position);
     }
 
+    //将View的点击事件 转为此点击事件
+    public interface OnItemLongClickListener {
+        void onItemLongClick(View view , int position);
+    }
+
+    //暴露给外面的监听方法
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mOnItemLongClickListener = listener;
+    }
+
     //暴露给外面的监听方法
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.mOnItemClickListener = listener;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (mOnItemLongClickListener != null) {
+            //注意这里使用getTag方法获取position
+            mOnItemLongClickListener.onItemLongClick(v,((ViewHolder)v.getTag()).position);
+        }
+        return true;
     }
 
     @Override
@@ -72,12 +95,6 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
         mData.add(data);
         notifyItemInserted(mData.size());
         notifyDataSetChanged();
-    }
-
-    public void reSet(T data){
-
-
-
     }
 
     //往特定位置，添加一个元素
@@ -117,6 +134,7 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
         View v = LayoutInflater.from(parent.getContext()).inflate(mLayoutRes, parent, false);
         //将创建的View注册点击事件
         v.setOnClickListener(this);
+        v.setOnLongClickListener(this);
         return new ViewHolder(v);
     }
 
@@ -213,6 +231,35 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
             return this;
         }
 
+
+        public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url,RequestOptions options) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                if(options == null){
+                    options = GlideUtil.getCircle();
+                }
+                Glide.with(activity)
+                        .load(url)
+                        .apply(options)
+                        .into((ImageView)view);
+            }
+            return this;
+        }
+
+        public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url, RequestOptions options, View.OnClickListener listener) {
+            View view = getView(id);
+            ((ImageView)view).setOnClickListener(listener);
+            if (view instanceof ImageView) {
+                if(options == null){
+                    options = GlideUtil.getCircle();
+                }
+                Glide.with(activity)
+                        .load(url)
+                        .apply(options)
+                        .into((ImageView)view);
+            }
+            return this;
+        }
 
         public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url) {
             View view = getView(id);

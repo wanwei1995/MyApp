@@ -34,5 +34,10 @@
     "name": "添加手势",
     "icon": "icon_gesture",
     "activity": "AddGestureActivity"
+  },
+  {
+    "name": "socket",
+    "icon": "icon_socket",
+    "activity": "SocketActivity"
   }
 ]

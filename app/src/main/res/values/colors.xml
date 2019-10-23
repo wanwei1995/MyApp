@@ -27,6 +27,8 @@
     <color name="blue_color">#0268FA</color>
     <color name="gray2_color">#BABFC7</color>
     <color name="gray3_color">#CFD2D8</color>
+    <color name="gray4_color">#cdcdcd</color>
+
     <color name="green">#CDDC39</color>
     <color name="purple">#C89EC4</color>
     <color name="purple2">#F8CAF4</color>

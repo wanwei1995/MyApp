@@ -21,6 +21,7 @@ import com.example.myapp.myView.MyLayoutAdapter;
 import com.example.myapp.myView.RecyclerViewDivider;
 import com.example.myapp.myView.SimpleDividerItemDecoration;
 import com.example.myapp.ui.main.dto.FolderDto;
+import com.example.myapp.util.AlertDialogUtil;
 import com.example.myapp.util.DateUtils;
 import com.example.myapp.util.FileUtil;
 
@@ -87,6 +88,25 @@ public class FolderActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+
+        myLayoutAdapter.setOnItemLongClickListener(new MyLayoutAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                //长按删除
+                AlertDialogUtil.YesOrNo("请确定是否删除文件夹", FolderActivity.this, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String path = folderList.get(position).getUrl();
+                        FileUtil.recursionDeleteFile(path);
+                        //刷新列表
+                        myLayoutAdapter.remove(position);
+                    }
+                });
+            }
+        });
+
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         //设置布局管理器
