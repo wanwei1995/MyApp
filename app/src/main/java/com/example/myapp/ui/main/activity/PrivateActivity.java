@@ -55,33 +55,30 @@ public class PrivateActivity extends BaseActivity {
 
     private void showMenu(List<MenuDto> menuDTOs) {
 
-        MyLayoutAdapter myLayoutAdapter = new MyLayoutAdapter<MenuDto>(menuDTOs,R.layout.item_recycler_icon) {
+        MyLayoutAdapter myLayoutAdapter = new MyLayoutAdapter<MenuDto>(menuDTOs, R.layout.item_recycler_icon) {
             @Override
             public void reBindViewHolder(ViewHolder holder, int position, List<MenuDto> mData) {
-                holder.setText(R.id.txt_icon,mData.get(position).getName());
-                holder.setImageResource(R.id.img_icon,getResources().getIdentifier(mData.get(position).getIcon(), "mipmap", getPackageName()));
+                holder.setText(R.id.txt_icon, mData.get(position).getName());
+                holder.setImageResource(R.id.img_icon, getResources().getIdentifier(mData.get(position).getIcon(), "mipmap", getPackageName()));
             }
         };
-        myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if (StringUtil.isNotEmpty(menuDTOs.get(position).getCode()) && menuDTOs.get(position).getCode().equals("save_pic")) {
-                    savePic();
-                    return;
-                }
-                try {
-                    //跳转至对应页面
-                    Intent intent = new Intent(PrivateActivity.this, Class.forName(getPackageName() + ".ui.main.activity." + menuDTOs.get(position).getActivity()));
-                    Bundle bundle = new Bundle();
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        myLayoutAdapter.setOnItemClickListener((view, position) -> {
+            if (StringUtil.isNotEmpty(menuDTOs.get(position).getCode()) && menuDTOs.get(position).getCode().equals("save_pic")) {
+                savePic();
+                return;
+            }
+            try {
+                //跳转至对应页面
+                Intent intent = new Intent(PrivateActivity.this, Class.forName(getPackageName() + ".ui.main.activity." + menuDTOs.get(position).getActivity()));
+                Bundle bundle = new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
         privateView.setAdapter(myLayoutAdapter);
-        privateView.setLayoutManager(new GridLayoutManager(this,3));
+        privateView.setLayoutManager(new GridLayoutManager(this, 3));
 
     }
 
@@ -119,56 +116,48 @@ public class PrivateActivity extends BaseActivity {
          */
         if (requestCode == Global.OPEN_ALBUM) {
             if (data != null) {
-                AlertDialogUtil.YesOrNo("是否保存?", this, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //长按存储图片
-                        //获取内部存储状态  
-                        String state = Environment.getExternalStorageState();
-                        //如果状态不是mounted，无法读写  
-                        if (!state.equals(Environment.MEDIA_MOUNTED)) {
-                            Toast.makeText(PrivateActivity.this, "系统异常，无法保存", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        //选择保存目录
-                        File file = new File(FileUtil.getAllPrivate());
-                        if (!file.exists()) {
-                            Toast.makeText(PrivateActivity.this, "请先创建文件夹!", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        List<String> folderNames = new ArrayList<>();
-                        File[] files = file.listFiles();
-                        for (File fileson : files) {
-                            if (fileson.isDirectory()) {
-                                folderNames.add(fileson.getName());
-                            }
-                        }
 
-                        ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(PrivateActivity.this,
-                                android.R.layout.simple_dropdown_item_1line, folderNames.toArray());
-
-                        new AlertDialog.Builder(PrivateActivity.this).setTitle("请选择文件夹")
-                                .setIcon(R.mipmap.icon_folder)
-                                .setAdapter(adapter, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String folderName = folderNames.get(which);
-                                        for (Uri uri : Matisse.obtainResult(data)) {
-                                            savePic2(uri,folderName);
-                                        }
-                                        Toast.makeText(PrivateActivity.this, "已保存到手机，请到相册查看", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }).show();
-
-
+                AlertDialogUtil.YesOrNo("",this,(dialog, which) -> {
+                    //长按存储图片
+                    //获取内部存储状态  
+                    String state = Environment.getExternalStorageState();
+                    //如果状态不是mounted，无法读写  
+                    if (!state.equals(Environment.MEDIA_MOUNTED)) {
+                        Toast.makeText(PrivateActivity.this, "系统异常，无法保存", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                    //选择保存目录
+                    File file = new File(FileUtil.getAllPrivate());
+                    if (!file.exists()) {
+                        Toast.makeText(PrivateActivity.this, "请先创建文件夹!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    List<String> folderNames = new ArrayList<>();
+                    File[] files = file.listFiles();
+                    for (File fileson : files) {
+                        if (fileson.isDirectory()) {
+                            folderNames.add(fileson.getName());
+                        }
+                    }
+
+                    ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(PrivateActivity.this,
+                            android.R.layout.simple_dropdown_item_1line, folderNames.toArray());
+
+                    new AlertDialog.Builder(PrivateActivity.this).setTitle("请选择文件夹")
+                            .setIcon(R.mipmap.icon_folder)
+                            .setAdapter(adapter, (dialog1, which1) -> {
+                                String folderName = folderNames.get(which1);
+                                for (Uri uri : Matisse.obtainResult(data)) {
+                                    savePic2(uri, folderName);
+                                }
+                                Toast.makeText(PrivateActivity.this, "已保存到手机，请到相册查看", Toast.LENGTH_SHORT).show();
+                            }).show();
                 });
             }
         }
     }
 
-    private void savePic2(Uri uri,String folderName) {
+    private void savePic2(Uri uri, String folderName) {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
         } catch (Exception e) {
@@ -177,7 +166,7 @@ public class PrivateActivity extends BaseActivity {
         }
         FileOutputStream out = null;
         try {
-            File file = FileUtil.createPhotoPath(FileUtil.PRIVATE1+ "/" + folderName, folderName, true);
+            File file = FileUtil.createPhotoPath(FileUtil.PRIVATE1 + "/" + folderName, folderName, true);
             out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         } catch (Exception e) {

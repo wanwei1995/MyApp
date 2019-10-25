@@ -1,12 +1,9 @@
 package com.example.myapp.ui;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
@@ -17,10 +14,7 @@ import com.example.myapp.ui.main.MainActivity;
 import com.example.myapp.ui.main2.Main2Activity;
 import com.example.myapp.util.AppConfig;
 import com.example.myapp.util.CheckPermissionUtils;
-import com.example.myapp.util.Global;
 import com.example.myapp.util.StringUtil;
-
-import java.nio.file.FileStore;
 
 public class FirstActivity extends AppCompatActivity {
 

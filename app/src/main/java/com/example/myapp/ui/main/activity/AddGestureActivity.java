@@ -67,50 +67,40 @@ public class AddGestureActivity extends BaseActivity {
 
         gesture.setGestureColor(Color.GREEN);
         gesture.setGestureStrokeWidth(5);
-        gesture.addOnGesturePerformedListener(new GestureOverlayView.OnGesturePerformedListener() {
-            @Override
-            public void onGesturePerformed(GestureOverlayView gestureOverlayView, final Gesture gesture) {
-                View saveDialog = getLayoutInflater().inflate(R.layout.dialog_save, null, false);
-                ImageView img_show = (ImageView) saveDialog.findViewById(R.id.img_show);
-                final EditText edit_name = (EditText) saveDialog.findViewById(R.id.edit_name);
-                Bitmap bitmap = gesture.toBitmap(128, 128, 10, 0xffff0000);
-                image.setImageBitmap(bitmap);
-                img_show.setImageBitmap(bitmap);
-                new AlertDialog.Builder(AddGestureActivity.this).setView(saveDialog)
-                        .setPositiveButton("保存", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+        gesture.addOnGesturePerformedListener((overlay, gesture1) -> {
+            View saveDialog = getLayoutInflater().inflate(R.layout.dialog_save, null, false);
+            ImageView img_show = (ImageView) saveDialog.findViewById(R.id.img_show);
+            final EditText edit_name = (EditText) saveDialog.findViewById(R.id.edit_name);
+            Bitmap bitmap = gesture1.toBitmap(128, 128, 10, 0xffff0000);
+            image.setImageBitmap(bitmap);
+            img_show.setImageBitmap(bitmap);
+            new AlertDialog.Builder(AddGestureActivity.this).setView(saveDialog)
+                    .setPositiveButton("保存", (dialog, which) -> {
 
-                                File mStoreFile = null;
-                                /*判断mStoreFile是为空。
-                                 * 判断手机是否插入SD卡，并且应用程序是否具有访问SD卡的权限
-                                 */
-                                if (mStoreFile == null && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                                    mStoreFile = new File(FileUtil.getGesture());
-                                }
-                                if (!mStoreFile.exists()) {
-                                    try {
-                                        mStoreFile.createNewFile();
-                                        gestureLibrary = GestureLibraries.fromFile(FileUtil.getGesture());
-                                    } catch (Exception e) {
-                                        Toast.makeText(AddGestureActivity.this, "手势文件创建失败", Toast.LENGTH_SHORT).show();
-                                        return;
-                                    }
-                                }
-
-                                gestureLibrary.addGesture(edit_name.getText().toString(), gesture);
-                                gestureLibrary.save();
+                        File mStoreFile = null;
+                        /*判断mStoreFile是为空。
+                         * 判断手机是否插入SD卡，并且应用程序是否具有访问SD卡的权限
+                         */
+                        if (mStoreFile == null && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                            mStoreFile = new File(FileUtil.getGesture());
+                        }
+                        if (!mStoreFile.exists()) {
+                            try {
+                                mStoreFile.createNewFile();
+                                gestureLibrary = GestureLibraries.fromFile(FileUtil.getGesture());
+                            } catch (Exception e) {
+                                Toast.makeText(AddGestureActivity.this, "手势文件创建失败", Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                        }).setNegativeButton("取消", null).show();
-            }
+                            gestureLibrary.addGesture(edit_name.getText().toString(), gesture1);
+                            gestureLibrary.save();
+                        }
+                    }).setNegativeButton("取消", null).show();
         });
 
-        image.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showAll.setVisibility(View.VISIBLE);
-                return false;
-            }
+        image.setOnLongClickListener(v -> {
+            showAll.setVisibility(View.VISIBLE);
+            return false;
         });
     }
 
@@ -144,22 +134,16 @@ public class AddGestureActivity extends BaseActivity {
                 holder.setImageBitmap(R.id.layout_image, bitmap);
             }
         };
-        myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                AlertDialogUtil.YesOrNo("是否删除手势", AddGestureActivity.this, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //删除手势并刷新layout
-                        gestureLibrary.removeEntry(gestureList.get(position));
-                        gestureLibrary.save();
-                        if (!gestureLibrary.load()) {
-                            Toast.makeText(AddGestureActivity.this, "手势库加载失败", Toast.LENGTH_SHORT).show();
-                        }
-                        myLayoutAdapter.remove(position);
-                    }
-                });
-            }
+        myLayoutAdapter.setOnItemClickListener((view, position) -> {
+            AlertDialogUtil.YesOrNo("是否删除手势", AddGestureActivity.this, (dialog, which) -> {
+                //删除手势并刷新layout
+                gestureLibrary.removeEntry(gestureList.get(position));
+                gestureLibrary.save();
+                if (!gestureLibrary.load()) {
+                    Toast.makeText(AddGestureActivity.this, "手势库加载失败", Toast.LENGTH_SHORT).show();
+                }
+                myLayoutAdapter.remove(position);
+            });
         });
         list.setAdapter(myLayoutAdapter);
     }

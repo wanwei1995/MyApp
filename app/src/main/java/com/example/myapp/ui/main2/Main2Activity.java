@@ -1,7 +1,6 @@
 package com.example.myapp.ui.main2;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -21,7 +19,6 @@ import com.example.myapp.ui.main2.Fragment.CookingFragment;
 import com.example.myapp.ui.main2.Fragment.DefaultFragment;
 import com.example.myapp.ui.main2.Fragment.ZxingFragment;
 import com.example.myapp.ui.main2.constant.MenuConstant;
-import com.example.myapp.util.Global;
 import com.example.myapp.util.PackageUtils;
 import com.example.myapp.util.ResUtils;
 import com.google.android.material.navigation.NavigationView;

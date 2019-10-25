@@ -132,12 +132,8 @@ public class Sound {
             initializeDeprecatedAPISoundPool();
         }
 
-        this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+        this.soundPool.setOnLoadCompleteListener((soundPool1, sampleId, status) ->  {
                 loaded = true;
-            }
         });
 
         // Add and Load sounds into SoundPool.

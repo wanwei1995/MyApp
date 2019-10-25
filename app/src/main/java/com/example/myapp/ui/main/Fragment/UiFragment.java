@@ -57,19 +57,17 @@ public class UiFragment extends BaseFragment {
         };
 
         uiGridTool.setAdapter(mAdapter);
-        uiGridTool.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    //跳转至对应页面
-                    Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main.activity." + menuDTOs.get(i).getActivity()));
-                    Bundle bundle = new Bundle();
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        uiGridTool.setOnItemClickListener((adapterView, view, i, l) -> {
+            try {
+                //跳转至对应页面
+                Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main.activity." + menuDTOs.get(i).getActivity()));
+                Bundle bundle = new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         });
 
     }

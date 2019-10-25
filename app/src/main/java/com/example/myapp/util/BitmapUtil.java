@@ -1,6 +1,5 @@
 package com.example.myapp.util;
 
-import android.content.Context;
 import android.graphics.*;
 import android.media.ExifInterface;
 

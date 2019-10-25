@@ -70,23 +70,19 @@ public class ZxingFragment extends BaseFragment{
         };
 
         gridTool.setAdapter(mAdapter);
-        gridTool.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if(i == 1){
-                    readZxing();
-                    return;
-                }
-                try {
-                    //跳转至对应页面
-                    Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main2.activity." + menuDTOs.get(i).getActivity()));
-                    Bundle bundle = new Bundle();
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        gridTool.setOnItemClickListener((parent, view, position, id) -> {
+            if(position== 1){
+                readZxing();
+                return;
+            }
+            try {
+                //跳转至对应页面
+                Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main2.activity." + menuDTOs.get(position).getActivity()));
+                Bundle bundle = new Bundle();
+                intent.putExtras(bundle);
+                startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

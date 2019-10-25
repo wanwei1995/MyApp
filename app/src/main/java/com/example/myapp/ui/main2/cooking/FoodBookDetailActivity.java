@@ -2,35 +2,20 @@ package com.example.myapp.ui.main2.cooking;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.shinichi.library.ImagePreview;
-import cc.shinichi.library.view.listener.OnBigImageClickListener;
-import cc.shinichi.library.view.listener.OnBigImageLongClickListener;
-import cc.shinichi.library.view.listener.OnBigImagePageChangeListener;
-import cc.shinichi.library.view.listener.OnOriginProgressListener;
 import com.bumptech.glide.Glide;
 import com.example.myapp.R;
 import com.example.myapp.data.service.FoodGoodService;
 import com.example.myapp.myView.SimpleToolbar;
-import com.example.myapp.ui.main.activity.SeeActivity;
 import com.example.myapp.ui.main2.dto.FoodBookDto;
 import com.example.myapp.util.AlertDialogUtil;
-import com.example.myapp.util.FileUtil;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Date;
 
 //菜单详情
 public class FoodBookDetailActivity extends AppCompatActivity {

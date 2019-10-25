@@ -1,6 +1,5 @@
 package com.example.myapp.ui.main2.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
@@ -26,7 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 // 带"."的文件夹是android默认的隐藏文件夹
-public class CreateZxingActivity extends BaseActivity{
+public class CreateZxingActivity extends BaseActivity {
 
     @BindView(R.id.info)
     EditText infoEt;
@@ -44,46 +42,39 @@ public class CreateZxingActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_zxing);
 
-        zxingImage.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View view) {
-                //长按存储图片
-                //获取内部存储状态  
-                String state = Environment.getExternalStorageState();
-                //如果状态不是mounted，无法读写  
-                if (!state.equals(Environment.MEDIA_MOUNTED)) {
-                    Toast.makeText(CreateZxingActivity.this, "系统异常，无法保存", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                AlertDialogUtil.YesOrNo("是否保存到本地", CreateZxingActivity.this, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FileOutputStream out = null;
-                        try {
-                            File file = FileUtil.createPhotoPath(FileUtil.FAMILY, info);
-                            out = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                            //保存图片后发送广播通知更新数据库
-                            Uri uri = Uri.fromFile(file);
-                            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-                            Toast.makeText(CreateZxingActivity.this, "已保存到手机，请到相册查看", Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            try {
-                                out.flush();
-                                out.close();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-
-
-                    }
-                });
+        zxingImage.setOnLongClickListener(v -> {
+            //长按存储图片
+            //获取内部存储状态  
+            String state = Environment.getExternalStorageState();
+            //如果状态不是mounted，无法读写  
+            if (!state.equals(Environment.MEDIA_MOUNTED)) {
+                Toast.makeText(CreateZxingActivity.this, "系统异常，无法保存", Toast.LENGTH_SHORT).show();
                 return true;
             }
+            AlertDialogUtil.YesOrNo("是否保存到本地", CreateZxingActivity.this, (dialog, which) -> {
+
+                FileOutputStream out = null;
+                try {
+                    File file = FileUtil.createPhotoPath(FileUtil.FAMILY, info);
+                    out = new FileOutputStream(file);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    //保存图片后发送广播通知更新数据库
+                    Uri uri = Uri.fromFile(file);
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+                    Toast.makeText(CreateZxingActivity.this, "已保存到手机，请到相册查看", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        out.flush();
+                        out.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            return true;
         });
     }
 

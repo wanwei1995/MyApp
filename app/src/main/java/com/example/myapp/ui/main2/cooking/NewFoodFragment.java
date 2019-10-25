@@ -1,13 +1,11 @@
 package com.example.myapp.ui.main2.cooking;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -23,8 +21,6 @@ import com.example.myapp.util.CollectionUtils;
 import com.example.myapp.util.DateUtils;
 import com.example.myapp.util.GlideUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -77,44 +73,34 @@ public class NewFoodFragment extends BaseFragment {
                 holder.setText(R.id.food_introduction, mData.get(position).getIntroduction());
             }
         };
-        myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                //查看详情
-                Intent intent = new Intent(mContext, FoodBookDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("foodBookDto", foodBookDtos.get(position));
-                intent.putExtras(bundle);
-                startActivityForResult(intent, Activity.RESULT_FIRST_USER);
-            }
+        myLayoutAdapter.setOnItemClickListener((view, position) -> {
+            //查看详情
+            Intent intent = new Intent(mContext, FoodBookDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("foodBookDto", foodBookDtos.get(position));
+            intent.putExtras(bundle);
+            startActivityForResult(intent, Activity.RESULT_FIRST_USER);
         });
-        myLayoutAdapter.setOnItemLongClickListener(new MyLayoutAdapter.OnItemLongClickListener() {
-            @Override
-            public void onItemLongClick(View view, int position) {
-                //长按删除
-                AlertDialogUtil.YesOrNo("确定从餐盘中删除美食?", mContext, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //删除
-                        myLayoutAdapter.remove(position);
 
-                        //数据库中删除
-                        StringBuilder sb = new StringBuilder();
-                        for(FoodBookDto foodBookDto :foodBookDtos){
-                            sb.append(foodBookDto.getId()).append(",");
-                        }
-                        if(CollectionUtils.isEmpty(foodBookDtos)){
-                            myFoodBookDto.setFoodIdStr("");
-                        }else {
-                            myFoodBookDto.setFoodIdStr(sb.substring(0,sb.length()-1));
-                        }
-                        myFoodGoodService.update(myFoodBookDto);
+        myLayoutAdapter.setOnItemLongClickListener((view, position) -> {
+            //长按删除
+            AlertDialogUtil.YesOrNo("确定从餐盘中删除美食?", mContext, (dialog, which) -> {
+                //删除
+                myLayoutAdapter.remove(position);
 
+                //数据库中删除
+                StringBuilder sb = new StringBuilder();
+                for (FoodBookDto foodBookDto : foodBookDtos) {
+                    sb.append(foodBookDto.getId()).append(",");
+                }
+                if (CollectionUtils.isEmpty(foodBookDtos)) {
+                    myFoodBookDto.setFoodIdStr("");
+                } else {
+                    myFoodBookDto.setFoodIdStr(sb.substring(0, sb.length() - 1));
+                }
+                myFoodGoodService.update(myFoodBookDto);
 
-                    }
-                });
-
-            }
+            });
         });
 
         foodList.setAdapter(myLayoutAdapter);

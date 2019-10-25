@@ -39,7 +39,6 @@ public class BaseActivity extends AbstractActivity {
 
     private ProgressDialog progressDialog;
 
-
     private Vibrator mVibrator;  //声明一个振动器对象
 
 
@@ -47,6 +46,12 @@ public class BaseActivity extends AbstractActivity {
         sound = new Sound(this);
         sound.setInitialSoundPool();
     }
+
+    protected void playSoundByResId(int soundId) {
+        sound.playSoundByResId(soundId);
+    }
+
+
 
     /**
      * 声音播放，【错误】
