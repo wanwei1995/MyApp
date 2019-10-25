@@ -27,6 +27,7 @@ import com.example.myapp.ui.main2.dto.MyFoodBookDto;
 import com.example.myapp.util.AlertDialogUtil;
 import com.example.myapp.util.DateUtils;
 import com.example.myapp.util.GlideUtil;
+import com.example.myapp.util.StringUtil;
 import com.ufo.dwrefresh.view.DWRefreshLayout;
 
 import java.util.Date;
@@ -47,6 +48,8 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
     private FoodGoodService foodGoodService;
 
     private MyFoodGoodService myFoodGoodService;
+
+    private MyLayoutAdapter myLayoutAdapter;
 
     public static FoodBookFragment newInstance() {
         FoodBookFragment fragment = new FoodBookFragment();
@@ -124,7 +127,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Activity.RESULT_FIRST_USER && resultCode == 1) {
             //刷新菜单
-            showFoodBook();
+            myLayoutAdapter.reLoad(foodGoodService.findList());
         }
     }
 
@@ -132,7 +135,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         //获取数据
         foodBookDtos = foodGoodService.findList();
 
-        MyLayoutAdapter myLayoutAdapter = new MyLayoutAdapter<FoodBookDto>(foodBookDtos, R.layout.item_layout_foodbook) {
+        myLayoutAdapter = new MyLayoutAdapter<FoodBookDto>(foodBookDtos, R.layout.item_layout_foodbook) {
             @Override
             public void reBindViewHolder(ViewHolder holder, int position, List<FoodBookDto> mData) {
                 holder.setImageBitmap(mContext, R.id.food_pic, mData.get(position).getPicUrl(), GlideUtil.getCrop(R.mipmap.icon_food_book_default));
@@ -167,8 +170,14 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                             return;
                         }
                     }
-                    //取最后一条作为菜单记录并更新
-                    myFoodBookDto.setFoodIdStr(myFoodBookDto.getFoodIdStr()+","+foodBook.getId());
+                    if(StringUtil.isNotEmpty(myFoodBookDto.getFoodIdStr())){
+                        //取最后一条作为菜单记录并更新
+                        myFoodBookDto.setFoodIdStr(myFoodBookDto.getFoodIdStr()+","+foodBook.getId());
+                    }else {
+                        //取最后一条作为菜单记录并更新
+                        myFoodBookDto.setFoodIdStr(String.valueOf(foodBook.getId()));
+                    }
+
 
                     myFoodGoodService.update(myFoodBookDto);
                 } else {

@@ -37,6 +37,7 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
         this.mLayoutRes = mLayoutRes;
     }
 
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -126,6 +127,11 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
             mData.clear();
         }
         notifyItemRangeRemoved(0,count);
+        notifyDataSetChanged();
+    }
+
+    public void reLoad(List data) {
+        mData = data;
         notifyDataSetChanged();
     }
 
