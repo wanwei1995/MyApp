@@ -16,6 +16,8 @@ public class FileUtil {
 
     public static final String FAMILY = "family";
 
+    public static final String CRASH = "crash";
+
     public static final String PRIVATE1 = "bb";
 
     public static final String FOODBOOK = "foodbook";

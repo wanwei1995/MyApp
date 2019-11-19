@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.ui.main.MainActivity;
 import com.example.myapp.ui.main2.Main2Activity;
@@ -16,7 +17,7 @@ import com.example.myapp.util.AppConfig;
 import com.example.myapp.util.CheckPermissionUtils;
 import com.example.myapp.util.StringUtil;
 
-public class FirstActivity extends AppCompatActivity {
+public class FirstActivity extends BaseActivity {
 
     @BindView(R.id.test)
     ImageButton test;
@@ -27,7 +28,7 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
-        ButterKnife.bind(this);
+
         //检查权限
         String[] permissions = CheckPermissionUtils.checkPermission(this);
         if (permissions.length != 0) {

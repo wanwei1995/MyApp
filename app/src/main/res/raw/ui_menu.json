@@ -39,5 +39,10 @@
     "name": "socket",
     "icon": "icon_socket",
     "activity": "SocketActivity"
+  },
+  {
+    "name": "首字母搜索汉字",
+    "icon": "icon_socket",
+    "activity": "HanZiActivity"
   }
 ]

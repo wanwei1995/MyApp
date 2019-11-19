@@ -28,6 +28,8 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".ui.main.activity.HanZiActivity">
+        </activity>
         <activity android:name=".ui.main.activity.SocketActivity">
         </activity>
         <activity android:name=".ui.main2.cooking.FoodBookDetailActivity">

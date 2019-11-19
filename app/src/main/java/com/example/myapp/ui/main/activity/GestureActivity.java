@@ -62,6 +62,7 @@ public class GestureActivity extends BaseActivity {
                         //跳转至对应页面
                         Intent intent = new Intent(GestureActivity.this, PrivateActivity.class);
                         startActivity(intent);
+                        finish();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

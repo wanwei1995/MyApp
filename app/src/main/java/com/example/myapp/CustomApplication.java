@@ -50,6 +50,7 @@ public class CustomApplication extends Application {
                     @Override
                     public void onCrash(Thread t, Throwable ex, CrashModel model) {
                         //CrashModel 崩溃信息记录，包含设备信息
+
                     }
                 });
         AppContext.init(this);

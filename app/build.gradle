@@ -66,4 +66,8 @@ dependencies {
     implementation 'com.github.SherlockGougou:BigImageViewPager:v4_4.1.0'
     //下拉刷新
     implementation 'com.ufo:DWRefreshLayout:0.9.6'
+    //汉字转拼音
+    implementation files('libs/pinyin4j-2.5.0.jar')
+    //搜索下拉框
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 }
