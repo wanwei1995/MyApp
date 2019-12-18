@@ -103,5 +103,7 @@ dependencies {
     implementation 'me.drakeet.floo:floo:1.1.0'
     //时间格式类
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+    //报表
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
 }
