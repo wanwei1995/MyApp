@@ -7,4 +7,8 @@ public class MenuConstant {
     public final static String ZXING = "zxing";
 
     public final static String COOKING = "cooking";
+
+    public final static String SETTING = "setting";
+
+
 }

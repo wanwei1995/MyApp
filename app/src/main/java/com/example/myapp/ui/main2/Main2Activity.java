@@ -14,10 +14,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.example.myapp.R;
-import com.example.myapp.ui.main2.Fragment.CallYouFragment;
-import com.example.myapp.ui.main2.Fragment.CookingFragment;
-import com.example.myapp.ui.main2.Fragment.DefaultFragment;
-import com.example.myapp.ui.main2.Fragment.ZxingFragment;
+import com.example.myapp.ui.main2.Fragment.*;
 import com.example.myapp.ui.main2.constant.MenuConstant;
 import com.example.myapp.util.PackageUtils;
 import com.example.myapp.util.ResUtils;
@@ -99,6 +96,15 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                     toolbar.setTitle(ResUtils.getString(R.string.menu_eating));
                 }
                 break;
+            case R.id.nav_setting:
+                if (mFgManager.findFragmentByTag(MenuConstant.SETTING) == null) {
+                    mFgManager.beginTransaction().replace(R.id.cly_main_content,
+                            SettingFragment.newInstance(), MenuConstant.SETTING).commit();
+                    toolbar.setTitle(ResUtils.getString(R.string.menu_setting));
+                }
+                break;
+
+
 
             default:
                 toolbar.setTitle("施工中...");

@@ -34,4 +34,9 @@
     <color name="purple2">#F8CAF4</color>
     <color name="purple3">#F3DBF1</color>
     <color name="folder">#379782</color>
+
+    <color name="head_color">#000000</color>
+
+    <color name="colorItem">#414459</color>
+
 </resources>

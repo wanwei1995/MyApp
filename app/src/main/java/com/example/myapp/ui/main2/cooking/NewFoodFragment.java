@@ -65,7 +65,7 @@ public class NewFoodFragment extends BaseFragment {
 
                         },
                         throwable -> {
-                            Toast.makeText(mContext, "删除数据失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "查找数据失败", Toast.LENGTH_SHORT).show();
                         }
                 ));
     }

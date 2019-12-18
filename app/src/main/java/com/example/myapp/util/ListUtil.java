@@ -46,6 +46,9 @@ public class ListUtil {
 
     public static List<Long> getList(String str){
         List<Long> list = new ArrayList<>();
+        if(StringUtil.isEmpty(str)){
+            return list;
+        }
         String [] array = str.split(",");
         for(int i = 0;i<array.length;i++){
             list.add(Long.valueOf(array[i]));

@@ -27,6 +27,7 @@ public class DateUtils {
     public static final String ymd_HMS = "yyyy/MM/dd HH:mm:ss";
     public static final String HMS = "HHmmss";
     public static final String H_m_s = "HH:mm:ss";
+    public static final String FORMAT_FOR_FIEL_NAME = "_yy_MM_dd_HH_mm_ss";
 
 
 
@@ -93,6 +94,10 @@ public class DateUtils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static String getCurrentDateString(){
+        return getFormatDateTime(new Date(), FORMAT_FOR_FIEL_NAME);
     }
 
 

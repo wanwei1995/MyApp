@@ -22,6 +22,13 @@ android {
             }
         }
     }
+    dataBinding {
+        enabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -86,4 +93,15 @@ dependencies {
     // room 配合 RxJava
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    //内存
+    implementation "com.snatik:storage:2.1.0"
+    //万能分组神器
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34"
+    //权限
+    implementation 'pub.devrel:easypermissions:1.2.0'
+    //floo
+    implementation 'me.drakeet.floo:floo:1.1.0'
+    //时间格式类
+    implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+
 }

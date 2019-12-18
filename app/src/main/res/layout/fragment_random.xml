@@ -5,10 +5,17 @@
              android:layout_height="match_parent"
              tools:context=".ui.main2.cooking.RandomFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+  <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="点击屏幕开始随机点菜!"/>
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="40dp"
+              android:text="美食"
+              android:id="@+id/food_name"
+              android:layout_gravity="center"/>
 
 </FrameLayout>
