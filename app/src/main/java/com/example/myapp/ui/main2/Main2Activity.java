@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,15 +15,17 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import com.example.myapp.R;
+import com.example.myapp.common.Router;
 import com.example.myapp.ui.main2.Fragment.*;
 import com.example.myapp.ui.main2.constant.MenuConstant;
 import com.example.myapp.util.PackageUtils;
 import com.example.myapp.util.ResUtils;
 import com.google.android.material.navigation.NavigationView;
+import me.drakeet.floo.StackCallback;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class Main2Activity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Main2Activity extends AppCompatActivity implements StackCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawer_layout;
@@ -46,7 +49,7 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                 CallYouFragment.newInstance(), MenuConstant.CALL_YOU).commit();
         toolbar.setTitle(ResUtils.getString(R.string.menu_call_you));
         String version = PackageUtils.packageName();
-        if(version != null) {
+        if (version != null) {
             String msg = String.format(ResUtils.getString(R.string.menu_zwll_version), version);
             tv_nav_title.setText(msg);
         }
@@ -70,6 +73,17 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         nav_view.setNavigationItemSelectedListener(this);
     }
 
+    @Nullable
+    @Override
+    public String indexKeyForStackTarget() {
+        return Router.IndexKey.INDEX_KEY_HOME;
+    }
+
+    @Override
+    public void onReceivedResult(@Nullable Object result) {
+        //重新加载页面数据
+        initData();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -105,7 +119,6 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
                 break;
 
 
-
             default:
                 toolbar.setTitle("施工中...");
                 mFgManager.beginTransaction().replace(R.id.cly_main_content,
@@ -125,7 +138,7 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(drawer_layout.isDrawerOpen(GravityCompat.START)){
+            if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
                 drawer_layout.closeDrawer(GravityCompat.START);
                 return true;
             }

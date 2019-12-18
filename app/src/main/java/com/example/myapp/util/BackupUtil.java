@@ -39,7 +39,7 @@ public class BackupUtil {
     public static final String SUFFIX = ".db";
     public static final String BACKUP_SUFFIX = "_恢复之前";
 
-    //
+    //备份：将运行中的db文件复制到指定文件夹
     private static boolean backupDB(String fileName) {
         Storage storage = new Storage(AppContext.getINSTANCE());
         boolean isWritable = Storage.isExternalWritable();
@@ -94,7 +94,7 @@ public class BackupUtil {
         String fileName = USER_BACKUP_PREFIX + SUFFIX;
         return backupDB(fileName);
     }
-
+    //恢复备份：将指定文件夹的db文件替换运行中的文件
     public static boolean restoreDB(String restoreFile) {
         Storage storage = new Storage(AppContext.getINSTANCE());
         if (storage.isFileExist(restoreFile)) {
