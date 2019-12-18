@@ -17,10 +17,6 @@ public class MainActivity extends BaseActivity {
     public final static String TAG_SECOND = "1";
     public final static String TAG_THIRD = "2";
 
-    @BindView(R.id.banner)
-    Banner banner;
-    @BindView(R.id.srcoll)
-    MyScrollView srcoll;
     @BindView(R.id.tabs)
     TabLayout tabs;
 

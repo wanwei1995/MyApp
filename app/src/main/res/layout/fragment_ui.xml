@@ -9,11 +9,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <GridView
+        <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ui_grid_tool"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:numColumns="3" />
+                android:layout_height="match_parent"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -44,5 +44,20 @@
     "name": "首字母搜索汉字",
     "icon": "icon_socket",
     "activity": "HanZiActivity"
+  },
+  {
+    "name": "动画效果",
+    "icon": "icon_animation",
+    "activity": "AnimationActivity"
+  },
+  {
+    "name": "手势测试",
+    "icon": "icon_gesture",
+    "activity": "GestureTestActivity"
+  },
+  {
+    "name": "异步线程",
+    "icon": "icon_asyn",
+    "activity": "RxJavaActivity"
   }
 ]

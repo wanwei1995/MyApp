@@ -6,19 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cc.shinichi.library.ImagePreview;
 import com.bumptech.glide.Glide;
+import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
-import com.example.myapp.data.service.FoodGoodService;
+import com.example.myapp.datebase.AppDatabase;
+import com.example.myapp.datebase.entity.FoodBook;
 import com.example.myapp.myView.SimpleToolbar;
-import com.example.myapp.ui.main2.dto.FoodBookDto;
 import com.example.myapp.util.AlertDialogUtil;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 //菜单详情
-public class FoodBookDetailActivity extends AppCompatActivity {
+public class FoodBookDetailActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     SimpleToolbar simpleToolbar;
@@ -29,7 +33,7 @@ public class FoodBookDetailActivity extends AppCompatActivity {
     @BindView(R.id.food_introduction)
     TextView foodIntroduction;
 
-    private FoodBookDto foodBookDto;
+    private FoodBook foodBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class FoodBookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_food_book_detail);
         ButterKnife.bind(this);
 
-        foodBookDto = (FoodBookDto) getIntent().getExtras().getSerializable("foodBookDto");
+        foodBook = (FoodBook) getIntent().getExtras().getSerializable("foodBookDto");
 
         initActionBar();
 
@@ -51,7 +55,7 @@ public class FoodBookDetailActivity extends AppCompatActivity {
                         // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好
                         .setContext(FoodBookDetailActivity.this)
                         .setIndex(0)
-                        .setImage(foodBookDto.getPicUrl())
+                        .setImage(foodBook.getPicUrl())
 
                         // 加载策略，默认为手动模式
                         .setLoadStrategy(ImagePreview.LoadStrategy.Default)
@@ -81,10 +85,10 @@ public class FoodBookDetailActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .asBitmap() // some .jpeg files are actually gif
-                .load(foodBookDto.getPicUrl())
+                .load(foodBook.getPicUrl())
                 .into(addImage);
-        foodName.setText(String.valueOf(foodBookDto.getName()));
-        foodIntroduction.setText(String.valueOf(foodBookDto.getIntroduction()));
+        foodName.setText(String.valueOf(foodBook.getName()));
+        foodIntroduction.setText(String.valueOf(foodBook.getIntroduction()));
     }
 
     public void initActionBar() {
@@ -101,16 +105,25 @@ public class FoodBookDetailActivity extends AppCompatActivity {
                 AlertDialogUtil.YesOrNo("是否删除菜单", FoodBookDetailActivity.this, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FoodGoodService foodGoodService = new FoodGoodService(FoodBookDetailActivity.this);
-                        foodGoodService.deleteById(foodBookDto.getId());
-                        //保存后关闭页面并返回刷新上级菜单
-                        Intent intent = new Intent();
-                        //把返回数据存入Intent(未盘完)
-                        intent.putExtra("result", "0");
-                        //设置返回数据
-                        setResult(RESULT_FIRST_USER, intent);
-                        //关闭Activity
-                        finish();
+
+                        mDisposable.add(Completable.fromAction(() -> {
+                            AppDatabase.getInstance().foodBookDao().delete(foodBook);
+                        }).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+                                            //删除后关闭页面并返回刷新上级菜单
+                                            Intent intent = new Intent();
+                                            //把返回数据存入Intent(未盘完)
+                                            intent.putExtra("result", "0");
+                                            //设置返回数据
+                                            setResult(RESULT_FIRST_USER, intent);
+                                            //关闭Activity
+                                            finish();
+                                        },
+                                        throwable -> {
+                                            Toast.makeText(FoodBookDetailActivity.this, "删除数据失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                ));
                     }
                 });
 

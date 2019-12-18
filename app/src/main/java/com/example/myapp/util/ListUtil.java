@@ -1,5 +1,6 @@
 package com.example.myapp.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListUtil {
@@ -41,6 +42,15 @@ public class ListUtil {
         public boolean isNeedMegare(T t1, T t2);
 
         public void megareOpr(T t1, T t2);
+    }
+
+    public static List<Long> getList(String str){
+        List<Long> list = new ArrayList<>();
+        String [] array = str.split(",");
+        for(int i = 0;i<array.length;i++){
+            list.add(Long.valueOf(array[i]));
+        }
+        return list;
     }
 
 }

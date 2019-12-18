@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import butterknife.BindView;
 import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
-import com.example.myapp.myView.MyAdapter;
+import com.example.myapp.myView.MyLayoutAdapter;
 import com.example.myapp.ui.main2.dto.MenuDto;
 
 import java.util.List;
@@ -20,9 +19,9 @@ import java.util.List;
 public class UiFragment extends BaseFragment {
 
     @BindView(R.id.ui_grid_tool)
-    GridView uiGridTool;
+    RecyclerView uiGridTool;
 
-    private BaseAdapter mAdapter = null;
+    private MyLayoutAdapter myLayoutAdapter;
 
     public static UiFragment newInstance() {
         UiFragment fragment = new UiFragment();
@@ -48,27 +47,31 @@ public class UiFragment extends BaseFragment {
 
     private void showMenu(List<MenuDto> menuDTOs) {
         //显示页面
-        mAdapter = new MyAdapter<MenuDto>(menuDTOs, R.layout.item_grid_icon) {
+        myLayoutAdapter = new MyLayoutAdapter<MenuDto>(menuDTOs, R.layout.item_grid_icon) {
             @Override
-            public void bindView(ViewHolder holder, MenuDto obj) {
-                holder.setImageResource(R.id.img_icon, mContext.getResources().getIdentifier(obj.getIcon(), "mipmap", mContext.getPackageName()));
-                holder.setText(R.id.txt_icon, obj.getName());
+            public void reBindViewHolder(ViewHolder holder, int position, List<MenuDto> mData) {
+                holder.setImageResource(R.id.img_icon, mContext.getResources().getIdentifier(mData.get(position).getIcon(), "mipmap", mContext.getPackageName()));
+                holder.setText(R.id.txt_icon, mData.get(position).getName());
             }
         };
 
-        uiGridTool.setAdapter(mAdapter);
-        uiGridTool.setOnItemClickListener((adapterView, view, i, l) -> {
-            try {
-                //跳转至对应页面
-                Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main.activity." + menuDTOs.get(i).getActivity()));
-                Bundle bundle = new Bundle();
-                intent.putExtras(bundle);
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                try {
+                    //跳转至对应页面
+                    Intent intent = new Intent(mContext, Class.forName(mContext.getPackageName() + ".ui.main.activity." + menuDTOs.get(position).getActivity()));
+                    Bundle bundle = new Bundle();
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+            }
         });
 
+        uiGridTool.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+        uiGridTool.setAdapter(myLayoutAdapter);
     }
 }

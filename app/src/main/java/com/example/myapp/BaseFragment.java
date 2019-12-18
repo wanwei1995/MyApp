@@ -11,6 +11,7 @@ import butterknife.Unbinder;
 import com.example.myapp.ui.main2.dto.MenuDto;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.reactivex.disposables.CompositeDisposable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +24,8 @@ public class BaseFragment extends Fragment {
     Unbinder unbinder;
 
     public FragmentActivity mContext;
+
+    protected final CompositeDisposable mDisposable = new CompositeDisposable();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,5 +65,10 @@ public class BaseFragment extends Fragment {
         return menuDTOs;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDisposable.clear();
+    }
 
 }

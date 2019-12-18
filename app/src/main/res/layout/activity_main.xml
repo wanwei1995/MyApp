@@ -7,14 +7,7 @@
               android:orientation="vertical"
               tools:context=".ui.main.MainActivity">
 
-    <com.youth.banner.Banner
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/banner"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"/>
-
     <com.example.myapp.myView.MyScrollView
-            android:id="@+id/srcoll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">

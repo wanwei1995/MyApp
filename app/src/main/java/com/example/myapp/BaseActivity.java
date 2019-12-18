@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import io.reactivex.disposables.CompositeDisposable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,11 +36,15 @@ import java.util.List;
 
 public class BaseActivity extends AbstractActivity {
 
+    public String TAG = "";
+
     private Sound sound;
 
     private ProgressDialog progressDialog;
 
     private Vibrator mVibrator;  //声明一个振动器对象
+
+    protected final CompositeDisposable mDisposable = new CompositeDisposable();
 
 
     protected void loadSound() {
@@ -172,5 +177,11 @@ public class BaseActivity extends AbstractActivity {
                     .originalEnable(true)
                     .forResult(Global.OPEN_ALBUM);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDisposable.clear();
     }
 }

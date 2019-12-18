@@ -1,34 +1,27 @@
-package com.example.myapp.ui.main2.dto;
+package com.example.myapp.datebase.entity;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-public class FoodBookDto implements Serializable {
+@Entity(tableName = "food_book")
+public class FoodBook implements Serializable {
 
     //唯一标识
+    @PrimaryKey(autoGenerate = true)
     private Long id;
     //菜名
     private String name;
     //简介
     private String introduction;
     //图片地址
+    @ColumnInfo(name = "pic_url")
     private String picUrl;
-
+    @ColumnInfo(name = "create_time")
     private Long createTime;
 
-    public FoodBookDto(Long id,String name,String introduction,String picUrl,Long createTime){
-        this.id = id;
-        this.name = name;
-        this.introduction = introduction;
-        this.picUrl = picUrl;
-        this.createTime = createTime;
-    }
-
-    public FoodBookDto(String name,String introduction,String picUrl,Long createTime){
-        this.name = name;
-        this.introduction = introduction;
-        this.picUrl = picUrl;
-        this.createTime = createTime;
-    }
 
     public Long getCreateTime() {
         return createTime;
