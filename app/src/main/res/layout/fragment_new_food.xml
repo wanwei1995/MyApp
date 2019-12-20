@@ -5,16 +5,25 @@
              android:layout_height="match_parent"
              tools:context=".ui.main2.cooking.NewFoodFragment">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.ufo.dwrefresh.view.DWRefreshLayout
+                android:id="@+id/dwRefreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/food_list">
+                android:layout_height="match_parent">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/food_list">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </com.ufo.dwrefresh.view.DWRefreshLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-    </LinearLayout>
 </FrameLayout>

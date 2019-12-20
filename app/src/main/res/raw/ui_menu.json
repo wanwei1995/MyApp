@@ -59,5 +59,10 @@
     "name": "异步线程",
     "icon": "icon_asyn",
     "activity": "RxJavaActivity"
+  },
+  {
+    "name": "webDav测试",
+    "icon": "icon_tool",
+    "activity": "WebDavActivity"
   }
 ]

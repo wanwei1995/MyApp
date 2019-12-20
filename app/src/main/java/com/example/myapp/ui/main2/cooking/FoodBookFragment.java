@@ -5,12 +5,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import butterknife.BindView;
@@ -24,6 +27,8 @@ import com.example.myapp.myView.MyLayoutAdapter;
 import com.example.myapp.util.DateUtils;
 import com.example.myapp.util.GlideUtil;
 import com.example.myapp.util.StringUtil;
+import com.example.myapp.util.ToastUtils;
+import com.example.myapp.webDav.WebDavService;
 import com.ufo.dwrefresh.view.DWRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,6 +51,11 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
 
     private MyLayoutAdapter myLayoutAdapter;
 
+    private WebDavService webDavService;
+
+    //点菜详情
+    private String info = "";
+
     public static FoodBookFragment newInstance() {
         FoodBookFragment fragment = new FoodBookFragment();
         return fragment;
@@ -64,6 +74,8 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         add.setOnClickListener(this);
         //显示菜单
         getBookData();
+
+        webDavService = new WebDavService(handler);
 
         //下拉刷新事件
         dwRefreshLayout.lockLoadMore(true);
@@ -99,6 +111,22 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         return view;
     }
 
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+
+            String info = (String) msg.obj;
+            if (0 == msg.what) {
+
+            } else {
+                ToastUtils.show("数据加载失败!");
+                dwRefreshLayout.setRefresh(false);
+            }
+        }
+    };
+
     @Override
     public void onClick(View v) {
 
@@ -119,7 +147,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Activity.RESULT_FIRST_USER && resultCode == 1) {
-
+            //刷新菜单
             mDisposable.add(AppDatabase.getInstance().foodBookDao().findList()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -129,13 +157,11 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                             throwable -> {
                                 Toast.makeText(mContext, "数据获取失败", Toast.LENGTH_SHORT).show();
                             }));
-            //刷新菜单
-
         }
     }
 
     private void getBookData() {
-
+        //获取菜谱数据
         mDisposable.add(AppDatabase.getInstance().foodBookDao().findList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -163,6 +189,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(mContext, FoodBookDetailActivity.class);
+                startActivity(intent);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("foodBookDto", foodBooks.get(position));
                 intent.putExtras(bundle);
@@ -176,41 +203,16 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                 FoodBook foodBook = foodBooks.get(position);
 
 
+
                 mDisposable.add(Completable.fromAction(() -> {
-                    MyFoodBook myFoodBook = AppDatabase.getInstance().myFoodBookDao().findLastOne();
-                    //如果上一次点餐已经超过3小时则，则新建菜单进行记录
-                    if (myFoodBook != null && DateUtils.addDay(new Date(), -1).getTime() < myFoodBook.getCreateTime()) {
-                        //如果菜品已存在,则提示
-                        String[] foodList = myFoodBook.getFoodIdStr().split(",");
-                        for (int i = 0; i < foodList.length; i++) {
-                            if (foodList[i].equals(String.valueOf(foodBook.getId()))) {
-                               throw new BusinessException("菜品已存在，请勿重新选择!");
-                            }
-                        }
-                        if (StringUtil.isNotEmpty(myFoodBook.getFoodIdStr())) {
-                            //取最后一条作为菜单记录并更新
-                            myFoodBook.setFoodIdStr(myFoodBook.getFoodIdStr() + "," + foodBook.getId());
-                        } else {
-                            //取最后一条作为菜单记录并更新
-                            myFoodBook.setFoodIdStr(String.valueOf(foodBook.getId()));
-                        }
-
-                        //保存数据
-                        AppDatabase.getInstance().myFoodBookDao().update(myFoodBook);
-
-                    } else {
-                        //新建一条作为菜单进行记录
-                        MyFoodBook myFoodBookNew = new MyFoodBook();
-                        myFoodBookNew.setFoodIdStr(String.valueOf(foodBook.getId()));
-                        myFoodBookNew.setCreateTime(new Date().getTime());
-                        //保存数据
-                        AppDatabase.getInstance().myFoodBookDao().insert(myFoodBookNew);
-                    }
-
+                    //保存点单记录
+                    save(foodBook);
                 }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
-                            Toast.makeText(mContext, "美食["+foodBook.getName()+"]已加入菜单，请继续选择", Toast.LENGTH_SHORT).show();
+                            //同步数据
+                            webDavService.upMyFoodInfo(info);
+                            Toast.makeText(mContext, "美食[" + foodBook.getName() + "]已加入菜单，请继续选择", Toast.LENGTH_SHORT).show();
                         }, throwable -> {
                             if (throwable instanceof BusinessException) {
                                 Toast.makeText(mContext, throwable.getMessage(), Toast.LENGTH_SHORT).show();
@@ -221,10 +223,37 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
             }
         });
 
-
-        //goodsList.setLayoutManager(new GridLayoutManager(mContext, 2));
         goodsList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         goodsList.setAdapter(myLayoutAdapter);
+    }
+
+    private void save(FoodBook foodBook) {
+        MyFoodBook myFoodBook = AppDatabase.getInstance().myFoodBookDao().findLastOne();
+        //如果上一次点餐已经超过3小时则，则新建菜单进行记录
+        if (myFoodBook != null && DateUtils.addDay(new Date(), -1).getTime() < myFoodBook.getCreateTime()) {
+            //如果菜品已存在,则提示
+            String[] foodList = myFoodBook.getFoodIdStr().split(",");
+            for (int i = 0; i < foodList.length; i++) {
+                if (foodList[i].equals(String.valueOf(foodBook.getId()))) {
+                    throw new BusinessException("菜品已存在，请勿重新选择!");
+                }
+            }
+            if (StringUtil.isNotEmpty(myFoodBook.getFoodIdStr())) {
+                //取最后一条作为菜单记录并更新
+                myFoodBook.setFoodIdStr(myFoodBook.getFoodIdStr() + "," + foodBook.getId());
+            } else {
+                //取最后一条作为菜单记录并更新
+                myFoodBook.setFoodIdStr(String.valueOf(foodBook.getId()));
+            }
+            info = myFoodBook.getFoodIdStr();
+            //保存数据
+            AppDatabase.getInstance().myFoodBookDao().update(myFoodBook);
+        } else {
+            info = myFoodBook.getFoodIdStr();
+            //新建一条作为菜单进行记录 保存数据
+            AppDatabase.getInstance().myFoodBookDao().insert(new MyFoodBook(new Date().getTime(), String.valueOf(foodBook.getId())));
+        }
+
     }
 
 }

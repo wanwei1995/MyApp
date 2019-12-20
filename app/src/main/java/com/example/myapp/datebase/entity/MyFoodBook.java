@@ -2,6 +2,7 @@ package com.example.myapp.datebase.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "my_food_book")
@@ -15,6 +16,14 @@ public class MyFoodBook {
 
     @ColumnInfo(name = "food_id_str")
     private String foodIdStr;
+
+    public MyFoodBook() {}
+
+    @Ignore
+    public MyFoodBook(Long createTime,String foodIdStr){
+        this.createTime = createTime;
+        this.foodIdStr = foodIdStr;
+    }
 
     public Long getId() {
         return id;
