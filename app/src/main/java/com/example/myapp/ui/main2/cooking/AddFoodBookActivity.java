@@ -67,7 +67,7 @@ public class AddFoodBookActivity extends BaseActivity {
                     FileOutputStream out = null;
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                        File file = FileUtil.createPhotoPath(FileUtil.FOODBOOK, foodName.getText().toString(), true);
+                        File file = FileUtil.createPicPath(FileUtil.FOODBOOK, foodName.getText().toString());
                         url = file.getAbsolutePath();
                         out = new FileOutputStream(file);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);

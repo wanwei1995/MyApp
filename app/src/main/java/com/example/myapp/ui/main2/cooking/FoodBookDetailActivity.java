@@ -3,6 +3,7 @@ package com.example.myapp.ui.main2.cooking;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,7 +40,6 @@ public class FoodBookDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_book_detail);
-        ButterKnife.bind(this);
 
         foodBook = (FoodBook) getIntent().getExtras().getSerializable("foodBookDto");
 
@@ -95,7 +95,7 @@ public class FoodBookDetailActivity extends BaseActivity {
         simpleToolbar.setLeftTitleClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                back();
             }
         });
         simpleToolbar.setRightTitleClickListener(new View.OnClickListener() {
@@ -112,13 +112,7 @@ public class FoodBookDetailActivity extends BaseActivity {
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(() -> {
                                             //删除后关闭页面并返回刷新上级菜单
-                                            Intent intent = new Intent();
-                                            //把返回数据存入Intent(未盘完)
-                                            intent.putExtra("result", "0");
-                                            //设置返回数据
-                                            setResult(RESULT_FIRST_USER, intent);
-                                            //关闭Activity
-                                            finish();
+                                            back();
                                         },
                                         throwable -> {
                                             Toast.makeText(FoodBookDetailActivity.this, "删除数据失败", Toast.LENGTH_SHORT).show();
@@ -130,5 +124,22 @@ public class FoodBookDetailActivity extends BaseActivity {
             }
         });
         simpleToolbar.setMainTitle("菜单详情");
+    }
+
+    private void back(){
+        Intent intent = new Intent();
+        intent.putExtra("result", "0");
+        setResult(RESULT_FIRST_USER, intent);
+
+        finish();
+    }
+
+    //重写返回方法
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            back();
+        }
+        return true;
     }
 }

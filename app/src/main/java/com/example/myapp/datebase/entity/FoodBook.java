@@ -2,6 +2,7 @@ package com.example.myapp.datebase.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -19,9 +20,9 @@ public class FoodBook implements Serializable {
     //图片地址
     @ColumnInfo(name = "pic_url")
     private String picUrl;
+
     @ColumnInfo(name = "create_time")
     private Long createTime;
-
 
     public Long getCreateTime() {
         return createTime;

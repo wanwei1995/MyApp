@@ -108,5 +108,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //webdav服务器操作工具
     implementation 'com.thegrizzlylabs.sardine-android:sardine-android:0.5'
+    //apache工具包
+    implementation 'commons-io:commons-io:2.6'
 
 }

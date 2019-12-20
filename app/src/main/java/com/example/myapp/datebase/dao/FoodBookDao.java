@@ -12,6 +12,9 @@ public interface FoodBookDao {
     @Insert
     void insert(FoodBook foodBook);
 
+    @Insert
+    void insertList(List<FoodBook> foodBooks);
+
     @Update
     void update(FoodBook foodBook);
 

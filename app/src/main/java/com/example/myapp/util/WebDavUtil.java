@@ -17,9 +17,13 @@ public class WebDavUtil {
 
     public static final String FOOD_PATH = "food/";
 
+    public static final String PIC_PATH = "pic/";
+
     public static final String WEBDAV_PATH = "https://dav.jianguoyun.com/dav/myApp/";
 
     public static final String MYFOOD_FILENAME = "myFood.txt";
+
+    public static final String FOODBOOK_FILENAME = "foodBook.txt";
 
 
     public static void upInfo(String info, String path, String fileName) throws Exception {
@@ -32,6 +36,18 @@ public class WebDavUtil {
         }
         //上传信息
         byte[] bytes = info.getBytes();
+        sardine.put(WEBDAV_PATH + path + fileName, bytes);
+    }
+
+    public static void upInfo(byte[] bytes, String path, String fileName) throws Exception {
+        //登录
+        Sardine sardine = new OkHttpSardine();
+        sardine.setCredentials(USERNAME, PASSWORD);
+        //目录不存在，则新建目录
+        if (!sardine.exists(WEBDAV_PATH + path)) {
+            sardine.createDirectory(WEBDAV_PATH + path);
+        }
+        //上传信息
         sardine.put(WEBDAV_PATH + path + fileName, bytes);
     }
 
@@ -64,5 +80,17 @@ public class WebDavUtil {
             }
         }
 
+    }
+
+    public static InputStream downPic(String path, String fileName) throws Exception {
+        //判断云盘上文件是否存在
+        //登录
+        Sardine sardine = new OkHttpSardine();
+        sardine.setCredentials(USERNAME, PASSWORD);
+        //文件不存在则抛异常
+        if (!sardine.exists(WEBDAV_PATH + path + fileName)) {
+            throw new BusinessException("文件不存在");
+        }
+        return sardine.get(WEBDAV_PATH + path + fileName);
     }
 }

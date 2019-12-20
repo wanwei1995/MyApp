@@ -24,19 +24,16 @@ import com.example.myapp.datebase.AppDatabase;
 import com.example.myapp.datebase.entity.FoodBook;
 import com.example.myapp.datebase.entity.MyFoodBook;
 import com.example.myapp.myView.MyLayoutAdapter;
-import com.example.myapp.util.DateUtils;
-import com.example.myapp.util.GlideUtil;
-import com.example.myapp.util.StringUtil;
-import com.example.myapp.util.ToastUtils;
+import com.example.myapp.util.*;
 import com.example.myapp.webDav.Result;
 import com.example.myapp.webDav.WebDavService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.ufo.dwrefresh.view.DWRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 //菜单页面
 public class FoodBookFragment extends BaseFragment implements View.OnClickListener {
@@ -89,9 +86,8 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(mContext, "同步", Toast.LENGTH_SHORT).show();
-
-                        dwRefreshLayout.setRefresh(false);
+                        //先从云盘上拉取数据与本地对比，找出不一致的数据,将拉取的新数据插入数据库 然后将两边数据合并重新上传数据
+                        webDavService.downFoodBookInfo();
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -117,15 +113,99 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            Result result = (Result) msg.obj;
             if (WebDavService.upMyFood_what == msg.what) {
-                Result result = (Result)msg.obj;
-                if(!result.isSuccess()){
-                    ToastUtils.show("数据同步失败!"+result.getMessage());
+                if (!result.isSuccess()) {
+                    ToastUtils.show("数据同步失败!" + result.getMessage());
                     dwRefreshLayout.setRefresh(false);
+                }
+            } else if (WebDavService.downFoodBook_what == msg.what) {
+                //获取下载数据并解析
+                if (!result.isSuccess()) {
+                    ToastUtils.show("菜谱数据获取失败!" + result.getMessage());
+                    dwRefreshLayout.setRefresh(false);
+                } else {
+                    //解析数据
+                    List<FoodBook> foodBookList = JacksonUtil.readValue(result.getMessage(), new TypeReference<List<FoodBook>>() {
+                    });
+                    //从拉取数据中筛选出新数据
+                    List<FoodBook> foodBookListNew = getNewData(foodBooks, foodBookList);
+                    //将新数据保存
+                    if (CollectionUtils.isNotEmpty(foodBookListNew)) {
+                        save(foodBookListNew);
+                    }
+                    //从拉取数据中筛选出新数据
+                    List<FoodBook> foodBookListLocal = getNewData(foodBookList, foodBooks);
+                    //如果本地也没有最新的数据则直接返回
+                    if(CollectionUtils.isEmpty(foodBookListLocal)){
+                        dwRefreshLayout.setRefresh(false);
+                        return;
+                    }
+                    //上传数据
+                    upLoad(foodBookListNew, foodBookListLocal);
+                    dwRefreshLayout.setRefresh(false);
+                }
+            } else if (WebDavService.upFoodBook_what == msg.what) {
+                if (result.isSuccess()) {
+                    ToastUtils.show("同步完成");
+                } else {
+                    ToastUtils.show("同步失败:" + result.getMessage());
                 }
             }
         }
     };
+
+    private void upLoad(List<FoodBook> foodBookListNew, List<FoodBook> foodBookListLocal) {
+        //上传数据之前将本地新数据图片同步到webDav上
+        for (FoodBook foodBook : foodBookListLocal) {
+            webDavService.upFoodBookPic(foodBook.getPicUrl());
+        }
+        //将新旧数据合并传到网上去
+        foodBooks.addAll(foodBookListNew);
+        String info = JacksonUtil.toJSon(foodBooks);
+        webDavService.upFoodBookInfo(info);
+    }
+
+    private void save(List<FoodBook> foodBookListNew) {
+        //将新数据的图片从webdav上下载到本地
+        for(FoodBook foodBook:foodBookListNew){
+            webDavService.downFoodBookPic(foodBook.getPicUrl());
+        }
+
+        //将新数据存到数据库
+        mDisposable.add(Completable.fromAction(() -> {
+            AppDatabase.getInstance().foodBookDao().insertList(foodBookListNew);
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                            //刷新页面
+                            myLayoutAdapter.reLoad(foodBooks);
+                            dwRefreshLayout.setRefresh(false);
+                        },
+                        throwable -> {
+                            Toast.makeText(mContext, "数据获取失败", Toast.LENGTH_SHORT).show();
+                        }));
+    }
+
+    private List<FoodBook> getNewData(List<FoodBook> list1, List<FoodBook> list2) {
+        Map<String, Integer> map = new HashMap<>();
+        if (CollectionUtils.isNotEmpty(list1)) {
+            for (FoodBook foodBook : list1) {
+                map.put(foodBook.getId() + foodBook.getName(), 1);
+            }
+        }
+        //将不一致数据筛选出来
+        List<FoodBook> foodBookListNew = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(list2)) {
+            for (FoodBook foodBook : list2) {
+                if (map.get(foodBook.getId() + foodBook.getName()) == null) {
+                    foodBookListNew.add(foodBook);
+                }
+            }
+        }
+        return foodBookListNew;
+    }
 
     @Override
     public void onClick(View v) {
@@ -152,7 +232,8 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(findList -> {
-                                myLayoutAdapter.reLoad(findList);
+                                foodBooks = findList;
+                                myLayoutAdapter.reLoad(foodBooks);
                             },
                             throwable -> {
                                 Toast.makeText(mContext, "数据获取失败", Toast.LENGTH_SHORT).show();
@@ -189,7 +270,6 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(mContext, FoodBookDetailActivity.class);
-                startActivity(intent);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("foodBookDto", foodBooks.get(position));
                 intent.putExtras(bundle);
@@ -201,7 +281,6 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onItemLongClick(View view, int position) {
                 FoodBook foodBook = foodBooks.get(position);
-
 
 
                 mDisposable.add(Completable.fromAction(() -> {
@@ -249,7 +328,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
             //保存数据
             AppDatabase.getInstance().myFoodBookDao().update(myFoodBook);
         } else {
-            info = myFoodBook.getFoodIdStr();
+            info = String.valueOf(foodBook.getId());
             //新建一条作为菜单进行记录 保存数据
             AppDatabase.getInstance().myFoodBookDao().insert(new MyFoodBook(new Date().getTime(), String.valueOf(foodBook.getId())));
         }

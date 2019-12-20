@@ -70,6 +70,17 @@ public class FileUtil {
         return file;
     }
 
+    public static File createPicPath(String path, String fileName) throws IOException {
+        String format = ".jpg";
+        String folder = createFolders(getSystemUrl(), path);
+        if (ERROR.equals(folder)) {
+            throw new IOException("文件夹创建失败.");
+        }
+        File file = new File(folder + File.separator + fileName + DateUtils.getFormatDateTime(DateUtils.getNowTime(), DateUtils.YMDHMS)+ format);
+        file.createNewFile();
+        return file;
+    }
+
     public static File getAppImagePath(String path, Boolean isPrivate) {
         String folder = getSystemUrl() + path;
         if (isPrivate) {
