@@ -9,7 +9,8 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "com.example.myapp"
-        minSdkVersion 16
+        //21以下需要解决dev>64k的问题
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -105,5 +106,7 @@ dependencies {
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     //报表
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //webdav服务器操作工具
+    implementation 'com.thegrizzlylabs.sardine-android:sardine-android:0.5'
 
 }
