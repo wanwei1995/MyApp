@@ -1,8 +1,6 @@
 package com.example.myapp.ui.main2.cooking;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,19 +20,14 @@ import com.example.myapp.datebase.AppDatabase;
 import com.example.myapp.datebase.entity.FoodBook;
 import com.example.myapp.datebase.entity.MyFoodBook;
 import com.example.myapp.myView.MyLayoutAdapter;
-import com.example.myapp.ui.main.activity.WebDavActivity;
 import com.example.myapp.util.*;
+import com.example.myapp.webDav.Result;
 import com.example.myapp.webDav.WebDavService;
-import com.thegrizzlylabs.sardineandroid.Sardine;
-import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine;
 import com.ufo.dwrefresh.view.DWRefreshLayout;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -94,41 +87,49 @@ public class NewFoodFragment extends BaseFragment {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            Result result = (Result) msg.obj;
+            if (WebDavService.downMyFood_what == msg.what) {
 
-            String info = (String) msg.obj;
-            if (0 == msg.what) {
+                if (result.isSuccess()) {
+                    String info = result.getMessage();
 
-                if (info.equals("0")) {
-                    Toast.makeText(mContext, "暂无点单数据", Toast.LENGTH_SHORT).show();
-                    dwRefreshLayout.setRefresh(false);
-                } else {
-                    if (info.equals(myFoodBookDtoList.get(0).getFoodIdStr())) {
-                        //如果获取数据相同 则无需刷新
+                    if (info.equals("0")) {
+                        Toast.makeText(mContext, "暂无点单数据", Toast.LENGTH_SHORT).show();
                         dwRefreshLayout.setRefresh(false);
-                        ToastUtils.show("已刷新");
+                    } else {
+                        if (info.equals(myFoodBookDtoList.get(0).getFoodIdStr())) {
+                            //如果获取数据相同 则无需刷新
+                            dwRefreshLayout.setRefresh(false);
+                            ToastUtils.show("已刷新");
+                            return;
+                        }
+                        mDisposable.add(Completable.fromAction(() -> {
+                            //保存数据
+                            save(info);
+                        }).subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(() -> {
+                                    //刷新页面
+                                    getData();
+                                    dwRefreshLayout.setRefresh(false);
+                                    ToastUtils.show("已刷新");
+                                }, throwable -> {
+                                    if (throwable instanceof BusinessException) {
+                                        ToastUtils.show(throwable.getMessage());
+                                    } else {
+                                        ToastUtils.show("系统异常,请重试");
+                                    }
+                                    dwRefreshLayout.setRefresh(false);
+                                }));
                     }
-                    mDisposable.add(Completable.fromAction(() -> {
-                        //保存数据
-                        save(info);
-                    }).subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(() -> {
-                                //刷新页面
-                                getData();
-                                dwRefreshLayout.setRefresh(false);
-                                ToastUtils.show("已刷新");
-                            }, throwable -> {
-                                if (throwable instanceof BusinessException) {
-                                    ToastUtils.show(throwable.getMessage());
-                                } else {
-                                    ToastUtils.show("系统异常,请重试");
-                                }
-                                dwRefreshLayout.setRefresh(false);
-                            }));
+                } else {
+                    ToastUtils.show("数据同步失败" + result.getMessage());
                 }
-            } else {
-                ToastUtils.show("数据加载失败!");
-                dwRefreshLayout.setRefresh(false);
+
+            } else if (WebDavService.upMyFood_what == msg.what) {
+                if (!result.isSuccess()) {
+                    ToastUtils.show("数据同步失败,请检查网路");
+                }
             }
         }
     };
@@ -142,11 +143,7 @@ public class NewFoodFragment extends BaseFragment {
         } else {
             //更新菜单
             MyFoodBook myFoodBookOld = myFoodBookDtoList.get(0);
-            if (StringUtil.isNotEmpty(myFoodBookOld.getFoodIdStr())) {
-                myFoodBookOld.setFoodIdStr(myFoodBookOld.getFoodIdStr() + "," + info);
-            } else {
-                myFoodBookOld.setFoodIdStr(info);
-            }
+            myFoodBookOld.setFoodIdStr(info);
             AppDatabase.getInstance().myFoodBookDao().update(myFoodBookOld);
         }
     }
@@ -218,7 +215,8 @@ public class NewFoodFragment extends BaseFragment {
                                     }).subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(() -> {
-
+                                                        //同步点单菜单
+                                                        webDavService.upMyFoodInfo(myFoodBook.getFoodIdStr());
                                                     },
                                                     throwable -> {
                                                         ToastUtils.show("更新数据失败");

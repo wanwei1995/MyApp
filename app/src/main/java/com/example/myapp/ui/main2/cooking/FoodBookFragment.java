@@ -28,6 +28,7 @@ import com.example.myapp.util.DateUtils;
 import com.example.myapp.util.GlideUtil;
 import com.example.myapp.util.StringUtil;
 import com.example.myapp.util.ToastUtils;
+import com.example.myapp.webDav.Result;
 import com.example.myapp.webDav.WebDavService;
 import com.ufo.dwrefresh.view.DWRefreshLayout;
 import io.reactivex.Completable;
@@ -116,13 +117,12 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-
-            String info = (String) msg.obj;
-            if (0 == msg.what) {
-
-            } else {
-                ToastUtils.show("数据加载失败!");
-                dwRefreshLayout.setRefresh(false);
+            if (WebDavService.upMyFood_what == msg.what) {
+                Result result = (Result)msg.obj;
+                if(!result.isSuccess()){
+                    ToastUtils.show("数据同步失败!"+result.getMessage());
+                    dwRefreshLayout.setRefresh(false);
+                }
             }
         }
     };
