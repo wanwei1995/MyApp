@@ -141,14 +141,17 @@ public class WebDavService {
             InputStream inputStream = null;
             OutputStream os = null;
             try {
+                //判断本地文件不存在再下载
+                File file = new File(url);
+                if(file!= null && file.exists()){
+                    return;
+                }
+                //
                 String fileName = StringUtil.getPathName(url);
                 //下载图片
                 inputStream = WebDavUtil.downPic(WebDavUtil.PIC_PATH, fileName);
                 //
-                File file = new File(url.substring(0,url.length()-fileName.length()));
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
+
 
                 os = new FileOutputStream(new File(url));
                 int bytesRead = 0;

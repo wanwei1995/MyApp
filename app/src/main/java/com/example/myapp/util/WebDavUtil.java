@@ -47,8 +47,10 @@ public class WebDavUtil {
         if (!sardine.exists(WEBDAV_PATH + path)) {
             sardine.createDirectory(WEBDAV_PATH + path);
         }
-        //上传信息
-        sardine.put(WEBDAV_PATH + path + fileName, bytes);
+        //如果文件不存在才不传
+        if (!sardine.exists(WEBDAV_PATH + path + fileName)) {
+            sardine.put(WEBDAV_PATH + path + fileName, bytes);
+        }
     }
 
     public static String downInfo(String path, String fileName) throws Exception {

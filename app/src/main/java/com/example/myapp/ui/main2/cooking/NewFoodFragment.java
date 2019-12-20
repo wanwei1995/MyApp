@@ -97,7 +97,7 @@ public class NewFoodFragment extends BaseFragment {
                         Toast.makeText(mContext, "暂无点单数据", Toast.LENGTH_SHORT).show();
                         dwRefreshLayout.setRefresh(false);
                     } else {
-                        if (info.equals(myFoodBookDtoList.get(0).getFoodIdStr())) {
+                        if (CollectionUtils.isNotEmpty(myFoodBookDtoList) && info.equals(myFoodBookDtoList.get(0).getFoodIdStr())) {
                             //如果获取数据相同 则无需刷新
                             dwRefreshLayout.setRefresh(false);
                             ToastUtils.show("已刷新");
