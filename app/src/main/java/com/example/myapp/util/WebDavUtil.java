@@ -11,9 +11,9 @@ import java.nio.charset.StandardCharsets;
 
 public class WebDavUtil {
 
-    private static final String USERNAME = "1254837494@qq.com";
+    private static final String USERNAME = "2971973441@qq.com";
 
-    private static final String PASSWORD = "aacqkt2pjkdqwgwg";
+    private static final String PASSWORD = "aafx92k94jsiispj";
 
     public static final String FOOD_PATH = "food/";
 

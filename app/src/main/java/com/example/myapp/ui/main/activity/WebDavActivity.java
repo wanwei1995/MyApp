@@ -37,7 +37,7 @@ public class WebDavActivity extends BaseActivity {
             public void run() {
                 //webdav连接服务器测试
                 Sardine sardine= new OkHttpSardine();
-                sardine.setCredentials("1254837494@qq.com","aacqkt2pjkdqwgwg");
+                sardine.setCredentials("2971973441@qq.com","aafx92k94jsiispj");
 
                 try {
                     //如果目录不存在,则创建目录
