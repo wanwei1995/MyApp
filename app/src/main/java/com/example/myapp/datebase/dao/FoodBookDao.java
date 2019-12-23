@@ -28,4 +28,8 @@ public interface FoodBookDao {
     @Transaction
     @Query(value = "select * from food_book where id in (:ids)")
     Flowable<List<FoodBook>> findListByIds(List<Long> ids);
+
+    @Transaction
+    @Query(value = "select * from food_book where id in (:ids)")
+    List<FoodBook> findListByIdsSimple(List<Long> ids);
 }

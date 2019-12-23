@@ -20,7 +20,7 @@ public interface MyFoodBookDao {
     void delete(MyFoodBook myFoodBook);
 
     @Transaction
-    @Query("SELECT * from my_food_book")
+    @Query("SELECT * from my_food_book order by create_time desc")
     Flowable<List<MyFoodBook>> findList();
 
     @Query("select * from my_food_book order by create_time desc limit 1")

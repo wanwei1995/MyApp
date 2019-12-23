@@ -252,6 +252,20 @@ public abstract class MyLayoutAdapter<T> extends RecyclerView.Adapter<MyLayoutAd
             return this;
         }
 
+        public ViewHolder setImageBitmap(@NonNull Activity activity, int id, int urlId,RequestOptions options) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                if(options == null){
+                    options = GlideUtil.getCircle();
+                }
+                Glide.with(activity)
+                        .load(urlId)
+                        .apply(options)
+                        .into((ImageView)view);
+            }
+            return this;
+        }
+
         public ViewHolder setImageBitmap(@NonNull Activity activity, int id, String url, RequestOptions options, View.OnClickListener listener) {
             View view = getView(id);
             ((ImageView)view).setOnClickListener(listener);

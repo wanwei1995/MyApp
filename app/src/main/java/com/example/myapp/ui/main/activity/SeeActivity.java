@@ -29,6 +29,7 @@ import com.example.myapp.util.FileUtil;
 import com.example.myapp.util.GlideUtil;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,8 @@ public class SeeActivity extends BaseActivity {
 
     private int showType = 0;
 
+    private MenuItem item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,16 +77,18 @@ public class SeeActivity extends BaseActivity {
         for (File fileSon : files) {
             imageDtos.add(fileSon.getPath());
         }
-
-        RequestOptions options = GlideUtil.getCircle(R.mipmap.icon_loading_girl).override(260, 260);
-        show(options);
+        show(true);
     }
 
-    private void show(RequestOptions options) {
+    private void show(boolean flag) {
         myLayoutAdapter = new MyLayoutAdapter<String>(imageDtos, R.layout.item_grid_view) {
             @Override
             public void reBindViewHolder(ViewHolder holder, int position, List<String> mData) {
-                holder.setImageBitmap(SeeActivity.this, R.id.img_icon, mData.get(position), options);
+                if(flag){
+                    holder.setImageBitmap(SeeActivity.this, R.id.img_icon, mData.get(position), GlideUtil.getCrop(R.mipmap.icon_loading_girl).override(260, 260));
+                }else{
+                    holder.setImageBitmap(SeeActivity.this, R.id.img_icon, R.mipmap.icon_loading_girl, GlideUtil.getCrop(R.mipmap.icon_loading_girl).override(260, 260));
+                }
             }
         };
         myLayoutAdapter.setOnItemLongClickListener(new MyLayoutAdapter.OnItemLongClickListener() {
@@ -106,6 +111,16 @@ public class SeeActivity extends BaseActivity {
         myLayoutAdapter.setOnItemClickListener(new MyLayoutAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+
+                if (showType == 1) {
+                    Intent intent = new Intent(SeeActivity.this, BigPicActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("position", String.valueOf(position));
+                    bundle.putSerializable("list", (Serializable) imageDtos);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    return;
+                }
 
                 ImagePreview.getInstance()
                         // 上下文，必须是activity，不需要担心内存泄漏，本框架已经处理好
@@ -228,6 +243,7 @@ public class SeeActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+        item = menu.findItem(R.id.action_cart);
         return true;
     }
 
@@ -237,14 +253,17 @@ public class SeeActivity extends BaseActivity {
             case R.id.action_cart://监听菜单按钮
                 switch (showType) {
                     case 0:
-                        showType =1;
-                        show(GlideUtil.getCrop(R.mipmap.icon_loading_girl).override(260, 260));
+                        showType = 1;
+                        item.setIcon(R.mipmap.icon_eye);
+                        //隐藏
+                        show(false);
                         break;
                     case 1:
-                        showType =0;
-                        show(GlideUtil.getCircle(R.mipmap.icon_loading_girl).override(260, 260));
+                        showType = 0;
+                        item.setIcon(R.mipmap.icon_eye2);
+                        //显示
+                        show(true);
                         break;
-
                 }
                 break;
         }

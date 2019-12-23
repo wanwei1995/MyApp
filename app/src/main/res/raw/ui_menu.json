@@ -64,5 +64,10 @@
     "name": "webDav测试",
     "icon": "icon_tool",
     "activity": "WebDavActivity"
+  },
+  {
+    "name": "遮罩",
+    "icon": "icon_tool",
+    "activity": "ScratchActivity"
   }
 ]

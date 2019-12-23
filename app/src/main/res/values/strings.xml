@@ -13,6 +13,10 @@
     <string name="drawer_close">抽屉关闭</string>
     <string name="tip">天天吃肉吃不胖，天天DrySister身体棒</string>
 
+
+    <string name="button_previous">上一条</string>
+    <string name="button_next">下一条</string>
+
     <!-- 抽屉菜单 -->
     <string name="menu_you">你</string>
     <string name="menu_call_you">call you</string>
