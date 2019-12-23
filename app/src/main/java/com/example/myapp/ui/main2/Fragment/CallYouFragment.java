@@ -19,13 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
+import com.bumptech.glide.Glide;
 import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
 import com.example.myapp.myView.ShapedImageView;
-import com.example.myapp.util.AppConfig;
-import com.example.myapp.util.BitmapUtil;
-import com.example.myapp.util.RealPathFromUriUtils;
-import com.example.myapp.util.StringUtil;
+import com.example.myapp.util.*;
 
 public class CallYouFragment extends BaseFragment implements View.OnClickListener {
 
@@ -81,7 +79,7 @@ public class CallYouFragment extends BaseFragment implements View.OnClickListene
         String picUrl = AppConfig.getLovePic();
         if (StringUtil.isNotEmpty(picUrl)) {
             addImage.setVisibility(View.GONE);
-            image.setImageBitmap(BitmapUtil.changeAndDigreePic(picUrl));
+            Glide.with(mContext).load(picUrl).apply(GlideUtil.getCircle()).into(addImage);
         }
         return view;
     }
