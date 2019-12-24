@@ -13,14 +13,14 @@
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:textSize="28dp"
+              android:textSize="20dp"
               android:textColor="@color/bar_font"
               android:id="@+id/food_title"/>
     <TextView android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:gravity="center"
-              android:textSize="16dp"
-              android:textColor="@color/bar_font"
+              android:textSize="14dp"
+              android:textColor="@color/gray_color"
               android:id="@+id/food_introduction"/>
 
 </LinearLayout>

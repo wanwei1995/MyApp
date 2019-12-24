@@ -59,8 +59,6 @@ public class OldFoodFragment extends BaseFragment {
 
         mAdapter = new OldFoodAdapter(null);
 
-        entityList = new ArrayList<>();
-
         mDisposable.add(AppDatabase.getInstance().myFoodBookDao().findList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,6 +67,7 @@ public class OldFoodFragment extends BaseFragment {
                             if (CollectionUtils.isEmpty(findList)) {
                                 return;
                             }
+                            entityList = new ArrayList<>();
                             getItem(findList);
                         },
                         throwable -> {

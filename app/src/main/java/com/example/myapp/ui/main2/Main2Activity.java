@@ -1,9 +1,19 @@
 package com.example.myapp.ui.main2;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -11,21 +21,25 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import com.bumptech.glide.Glide;
+import com.example.myapp.BaseActivity;
 import com.example.myapp.R;
 import com.example.myapp.common.Router;
 import com.example.myapp.ui.main2.Fragment.*;
 import com.example.myapp.ui.main2.constant.MenuConstant;
-import com.example.myapp.util.PackageUtils;
-import com.example.myapp.util.ResUtils;
+import com.example.myapp.util.*;
 import com.google.android.material.navigation.NavigationView;
 import me.drakeet.floo.StackCallback;
+import pub.devrel.easypermissions.EasyPermissions;
+import pub.devrel.easypermissions.PermissionRequest;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class Main2Activity extends AppCompatActivity implements StackCallback, NavigationView.OnNavigationItemSelectedListener {
+public class Main2Activity extends BaseActivity implements StackCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawer_layout;
@@ -35,14 +49,35 @@ public class Main2Activity extends AppCompatActivity implements StackCallback, N
 
     private Boolean isExit = false;
 
+    private final static int OPEN_ALBUM = 2;
+
+    private ImageView image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         mFgManager = getSupportFragmentManager();
+
         initView();
         initData();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case OPEN_ALBUM:
+                if (data == null) {
+                    return;
+                }
+                String picUrl = RealPathFromUriUtils.getRealPathFromUri(Main2Activity.this, data.getData());
+                AppConfig.set(AppConfig.MY_PIC, picUrl);
+                //相册返回
+                Glide.with(Main2Activity.this).load(picUrl).apply(GlideUtil.getCircle()).into(image);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     private void initData() {
         mFgManager.beginTransaction().replace(R.id.cly_main_content,
@@ -68,6 +103,33 @@ public class Main2Activity extends AppCompatActivity implements StackCallback, N
 
         nav_view = findViewById(R.id.nav_view);
         tv_nav_title = nav_view.getHeaderView(0).findViewById(R.id.tv_nav_title);
+
+        image= nav_view.getHeaderView(0).findViewById(R.id.img_head_icon);
+
+        String picUrl = AppConfig.getMyPic();
+        if (StringUtil.isNotEmpty(picUrl)) {
+            Glide.with(Main2Activity.this).load(picUrl).apply(GlideUtil.getCircle()).into(image);
+        }
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(EasyPermissions.hasPermissions(Main2Activity.this,Manifest.permission.CAMERA)){
+                    Intent intentToPickPic = new Intent(Intent.ACTION_PICK, null);
+                    // 如果限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型" 所有类型则写 "image/*"
+                    intentToPickPic.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intentToPickPic, OPEN_ALBUM);
+                }else{
+                    EasyPermissions.requestPermissions(new PermissionRequest.Builder(Main2Activity.this, 1, Manifest.permission.CAMERA,
+                            Manifest.permission.VIBRATE)
+                            .setRationale("请打开相机权限后再试!")
+                            .setPositiveButtonText(R.string.text_affirm)
+                            .setNegativeButtonText(R.string.text_button_cancel)
+                            .build());
+                }
+            }
+        });
+
         //侧边菜单点击事件
         nav_view.setItemIconTintList(null);
         nav_view.setNavigationItemSelectedListener(this);

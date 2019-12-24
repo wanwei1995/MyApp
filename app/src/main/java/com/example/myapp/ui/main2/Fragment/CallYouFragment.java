@@ -79,7 +79,7 @@ public class CallYouFragment extends BaseFragment implements View.OnClickListene
         String picUrl = AppConfig.getLovePic();
         if (StringUtil.isNotEmpty(picUrl)) {
             addImage.setVisibility(View.GONE);
-            Glide.with(mContext).load(picUrl).apply(GlideUtil.getCircle()).into(addImage);
+            Glide.with(mContext).load(picUrl).apply(GlideUtil.getCircle()).into(image);
         }
         return view;
     }

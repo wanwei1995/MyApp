@@ -12,6 +12,8 @@ public class AppConfig {
 
 	public static final String LOVE_PIC = "lovePic";
 
+	public static final String MY_PIC = "myPic";
+
 	public static final String CONFIG_FILE = "settings";
 
 	public static String get(String key) {
@@ -44,6 +46,10 @@ public class AppConfig {
 
 	public static String getLovePic(){
 		return get(LOVE_PIC);
+	}
+
+	public static String getMyPic(){
+		return get(MY_PIC);
 	}
 
 	public static String getEnvironment(){

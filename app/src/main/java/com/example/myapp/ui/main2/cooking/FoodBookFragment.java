@@ -33,6 +33,7 @@ import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import java.io.File;
 import java.util.*;
 
 //菜单页面
@@ -179,7 +180,11 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                            //刷新页面
+                            //刷新页面:图片下载后再重新刷新页面
+                            File file = new File(foodBookListNew.get(foodBookListNew.size()-1).getPicUrl());
+                            while(file == null){
+                                Thread.sleep(100);
+                            }
                             myLayoutAdapter.reLoad(foodBooks);
                             dwRefreshLayout.setRefresh(false);
                         },
@@ -309,7 +314,7 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
     private void save(FoodBook foodBook) {
         MyFoodBook myFoodBook = AppDatabase.getInstance().myFoodBookDao().findLastOne();
         //如果上一次点餐已经超过3小时则，则新建菜单进行记录
-        if (myFoodBook != null && DateUtils.addDay(new Date(), -1).getTime() < myFoodBook.getCreateTime()) {
+        if (myFoodBook != null && DateUtils.initDateByDay().getTime() < myFoodBook.getCreateTime()) {
             //如果菜品已存在,则提示
             String[] foodList = myFoodBook.getFoodIdStr().split(",");
             for (int i = 0; i < foodList.length; i++) {

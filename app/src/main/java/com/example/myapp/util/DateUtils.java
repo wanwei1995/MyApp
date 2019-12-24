@@ -101,6 +101,19 @@ public class DateUtils {
     }
 
 
+    /**
+     * 获得当天零时零分零秒
+     * @return
+     */
+    public static Date initDateByDay(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+
     public static Date formatStringToDate(String dateStr, String format) {
         if (dateStr == null || dateStr.trim().length() < 1) {
             return null;

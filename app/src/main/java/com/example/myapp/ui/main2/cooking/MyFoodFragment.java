@@ -1,6 +1,7 @@
 package com.example.myapp.ui.main2.cooking;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,30 @@ public class MyFoodFragment extends BaseFragment {
             public CharSequence getPageTitle(int position) {
 
                 return titles.get(position);
+            }
+
+
+        });
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int     positionOffsetPixels) {
+                // 页面正在滚动时不断调用
+               /* Log.d("ViewPager", "onPageScrolled————>"
+                        + "    position：" + position
+                        + "    positionOffest：" + positionOffset
+                        + "    positionOffsetPixels：" + positionOffsetPixels);*/
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+               //页面选中时调用
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                // 页面的滚动状态变化时调用
+               // Log.d("ViewPager", "onPageScrollStateChanged————>    state：" + state);
             }
         });
 

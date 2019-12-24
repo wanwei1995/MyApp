@@ -77,7 +77,7 @@ public class SeeActivity extends BaseActivity {
         for (File fileSon : files) {
             imageDtos.add(fileSon.getPath());
         }
-        show(true);
+        show(false);
     }
 
     private void show(boolean flag) {
@@ -112,7 +112,7 @@ public class SeeActivity extends BaseActivity {
             @Override
             public void onItemClick(View view, int position) {
 
-                if (showType == 1) {
+                if (showType == 0) {
                     Intent intent = new Intent(SeeActivity.this, BigPicActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("position", String.valueOf(position));
@@ -252,14 +252,14 @@ public class SeeActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_cart://监听菜单按钮
                 switch (showType) {
-                    case 0:
-                        showType = 1;
+                    case 1:
+                        showType = 0;
                         item.setIcon(R.mipmap.icon_eye);
                         //隐藏
                         show(false);
                         break;
-                    case 1:
-                        showType = 0;
+                    case 0:
+                        showType = 1;
                         item.setIcon(R.mipmap.icon_eye2);
                         //显示
                         show(true);

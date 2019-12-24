@@ -137,7 +137,7 @@ public class NewFoodFragment extends BaseFragment {
     private void save(String info) {
         //获取点菜id
         //如果没有最新的菜单，则新建一个并将数据插入
-        if (CollectionUtils.isEmpty(myFoodBookDtoList) || DateUtils.addDay(new Date(), -1).getTime() > myFoodBookDtoList.get(0).getCreateTime()) {
+        if (CollectionUtils.isEmpty(myFoodBookDtoList) || DateUtils.initDateByDay().getTime() > myFoodBookDtoList.get(0).getCreateTime()) {
             //新建菜单,保存数据
             AppDatabase.getInstance().myFoodBookDao().insert(new MyFoodBook(new Date().getTime(), info));
         } else {
@@ -151,7 +151,7 @@ public class NewFoodFragment extends BaseFragment {
 
     private void getData() {
 
-        mDisposable.add(AppDatabase.getInstance().myFoodBookDao().findByTime(DateUtils.addDay(new Date(), -1).getTime()).subscribeOn(Schedulers.io())
+        mDisposable.add(AppDatabase.getInstance().myFoodBookDao().findByTime(DateUtils.initDateByDay().getTime()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
                             myFoodBookDtoList = list;

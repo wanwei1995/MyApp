@@ -24,6 +24,7 @@ import com.chad.library.adapter.base.BaseSectionQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.myapp.R;
 import com.example.myapp.ui.main2.Fragment.setting.SettingSectionEntity;
+import com.example.myapp.util.GlideUtil;
 
 import java.util.List;
 
@@ -47,8 +48,6 @@ public class OldFoodAdapter extends BaseSectionQuickAdapter<OldFoodSectionEntity
                 .setText(R.id.food_introduction, item.t.foodBook.getIntroduction())
                 .addOnClickListener(R.id.switch_item);
         Glide.with(mContext).load(item.t.foodBook.getPicUrl())
-                .apply(new RequestOptions()
-                .error(R.mipmap.icon_loading_fail)
-                .centerCrop()).into((ImageView) helper.getView(R.id.food_pic));
+                .apply(GlideUtil.getCrop()).into((ImageView) helper.getView(R.id.food_pic));
     }
 }

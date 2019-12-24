@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/img_head_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toTopOf="@+id/bg_nav_top_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
