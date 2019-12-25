@@ -119,6 +119,7 @@
     <string name="toast_backup_fail">备份失败</string>
     <string name="toast_backup_list_fail">备份文件列表获取失败</string>
     <string name="toast_restore_fail">恢复备份失败</string>
+    <string name="see_more">See More ...</string>
 
 
     <!--关于相关-->

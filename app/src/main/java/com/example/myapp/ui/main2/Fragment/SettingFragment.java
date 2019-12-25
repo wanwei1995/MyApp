@@ -9,13 +9,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
 import com.example.myapp.common.Router;
 import com.example.myapp.datebase.entity.BackupBean;
 import com.example.myapp.myView.BackupFliesDialog;
-import com.example.myapp.ui.main2.Fragment.setting.SettingAdapter;
-import com.example.myapp.ui.main2.Fragment.setting.SettingSectionEntity;
+import com.example.myapp.ui.main2.adapter.MySectionEntity;
+import com.example.myapp.ui.main2.adapter.SectionQuickAdapter;
+import com.example.myapp.ui.main2.dto.SettingDto;
 import com.example.myapp.util.BackupUtil;
 import com.example.myapp.util.ToastUtils;
 import io.reactivex.BackpressureStrategy;
@@ -36,7 +38,7 @@ public class SettingFragment extends BaseFragment {
     @BindView(R.id.setting_list)
     RecyclerView settingList;
 
-    private SettingAdapter mAdapter;
+    private SectionQuickAdapter mAdapter;
 
     public static SettingFragment newInstance() {
         SettingFragment fragment = new SettingFragment();
@@ -55,13 +57,27 @@ public class SettingFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         butterKnife(view);
 
-        mAdapter = new SettingAdapter(null);
 
-        List<SettingSectionEntity> list = new ArrayList<>();
-        list.add(new SettingSectionEntity(getString(R.string.text_setting_backup)));
-        list.add(new SettingSectionEntity(new SettingSectionEntity.Item(getString(R.string.text_go_backup), getString(R.string.text_setting_go_backup_content))));
-        list.add(new SettingSectionEntity(new SettingSectionEntity.Item(getString(R.string.text_setting_restore), getString(R.string.text_setting_restore_content))));
-        list.add(new SettingSectionEntity(new SettingSectionEntity.Item(getString(R.string.text_setting_auto_backup), getString(R.string.text_setting_auto_backup_content))));
+        List<MySectionEntity> list = new ArrayList<>();
+        list.add(new MySectionEntity(true,getString(R.string.text_setting_backup)));
+        list.add(new MySectionEntity(false,new SettingDto(getString(R.string.text_go_backup), getString(R.string.text_setting_go_backup_content))));
+        list.add(new MySectionEntity(false,new SettingDto(getString(R.string.text_setting_restore), getString(R.string.text_setting_restore_content))));
+        list.add(new MySectionEntity(false,new SettingDto(getString(R.string.text_setting_auto_backup), getString(R.string.text_setting_auto_backup_content))));
+
+        mAdapter = new SectionQuickAdapter(R.layout.item_setting,R.layout.item_setting_head,list) {
+
+            @Override
+            public void reConvertHeader(BaseViewHolder helper, MySectionEntity item) {
+                helper.setText(R.id.tv_head,((String)item.getObject()));
+            }
+
+            @Override
+            public void reConvertItem(BaseViewHolder helper, MySectionEntity item) {
+                helper.setText(R.id.tv_title,((SettingDto)item.getObject()).getTitle1());
+                helper.setText(R.id.tv_content,((SettingDto)item.getObject()).getTitle2());
+            }
+        };
+
         mAdapter.setNewData(list);
 
 

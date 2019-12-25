@@ -105,7 +105,6 @@ public class Sound {
         Log.d("Sound", "Load Sounds.");
         soundIdMap.clear();
 
-        addSoundsToSoundPool(R.raw.right);
         addSoundsToSoundPool(R.raw.error);
         addSoundsToSoundPool(R.raw.ok);
     }

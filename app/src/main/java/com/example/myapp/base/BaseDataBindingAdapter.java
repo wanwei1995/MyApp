@@ -18,13 +18,13 @@ package com.example.myapp.base;
 
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.R;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -33,30 +33,14 @@ import java.util.List;
  *
  * @author Bakumon https://bakumon.me
  */
-public abstract class BaseDataBindingAdapter<T> extends BaseQuickAdapter<T, BaseDataBindingAdapter.DataBindingViewHolder> {
+public abstract class BaseDataBindingAdapter<T> extends BaseQuickAdapter<T, BaseViewHolder> {
     public BaseDataBindingAdapter(int layoutResId, @Nullable List<T> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected View getItemView(int layoutResId, ViewGroup parent) {
-        ViewDataBinding binding = DataBindingUtil.inflate(mLayoutInflater, layoutResId, parent, false);
-        if (binding == null) {
-            return super.getItemView(layoutResId, parent);
-        }
-        View view = binding.getRoot();
-        view.setTag(R.id.BaseQuickAdapter_databinding_support, binding);
-        return view;
-    }
-
-    public static class DataBindingViewHolder extends BaseViewHolder {
-
-        public DataBindingViewHolder(View view) {
-            super(view);
-        }
-
-        public ViewDataBinding getBinding() {
-            return (ViewDataBinding) itemView.getTag(R.id.BaseQuickAdapter_databinding_support);
-        }
+    protected void onItemViewHolderCreated(@NotNull BaseViewHolder viewHolder, int viewType) {
+        // 绑定 view
+        DataBindingUtil.bind(viewHolder.itemView);
     }
 }

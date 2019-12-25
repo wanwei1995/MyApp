@@ -16,28 +16,33 @@
 
 package com.example.myapp.ui.main2.adapter;
 
-import com.chad.library.adapter.base.entity.SectionEntity;
-import com.example.myapp.datebase.entity.FoodBook;
-import com.example.myapp.datebase.entity.MyFoodBook;
+import com.chad.library.adapter.base.entity.JSectionEntity;
 
 /**
  * 分组布局实体
  *
  * @author Bakumon https://bakumon.me
  */
-public class OldFoodSectionEntity extends SectionEntity<OldFoodSectionEntity.Item> {
-    public OldFoodSectionEntity(String header) {
-        super(true, header);
+public class MySectionEntity extends JSectionEntity{
+
+    // 你的数据内容
+    private boolean isHeader;
+    private Object object;
+
+    public MySectionEntity(boolean isHeader, Object object) {
+        this.isHeader = isHeader;
+        this.object = object;
     }
 
-    public OldFoodSectionEntity(Item item) {
-        super(item);
+    public Object getObject() {
+        return object;
     }
 
-    public static class Item {
-        public Item(FoodBook foodBook) {
-            this.foodBook = foodBook;
-        }
-        public FoodBook foodBook;
+    /**
+     * 重写此方法，返回 boolen 值，告知是否是header
+     */
+    @Override
+    public boolean isHeader() {
+        return isHeader;
     }
 }

@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.BR;
 import com.example.myapp.R;
 import com.example.myapp.base.BaseDataBindingAdapter;
@@ -91,7 +92,7 @@ public class BackupFliesDialog {
         }
 
         @Override
-        protected void convert(DataBindingViewHolder helper, BackupBean item) {
+        protected void convert(BaseViewHolder helper, BackupBean item) {
             ViewDataBinding binding = helper.getBinding();
 
             binding.setVariable(BR.backupBean, item);

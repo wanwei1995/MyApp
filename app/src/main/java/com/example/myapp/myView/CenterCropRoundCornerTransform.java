@@ -7,6 +7,8 @@ import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 
 import java.security.MessageDigest;
 
+
+//解决 centerCrop 与trans不兼容的问题
 public class CenterCropRoundCornerTransform extends CenterCrop {
 
     private int radius = 0;

@@ -4,20 +4,24 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
+import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
 import com.example.myapp.datebase.AppDatabase;
 import com.example.myapp.datebase.entity.FoodBook;
 import com.example.myapp.datebase.entity.MyFoodBook;
-import com.example.myapp.ui.main2.Fragment.setting.SettingSectionEntity;
-import com.example.myapp.ui.main2.adapter.OldFoodAdapter;
-import com.example.myapp.ui.main2.adapter.OldFoodSectionEntity;
+import com.example.myapp.ui.main2.adapter.MySectionEntity;
+import com.example.myapp.ui.main2.adapter.SectionQuickAdapter;
+import com.example.myapp.ui.main2.dto.SettingDto;
 import com.example.myapp.util.CollectionUtils;
 import com.example.myapp.util.DateUtils;
+import com.example.myapp.util.GlideUtil;
 import com.example.myapp.util.ListUtil;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,9 +38,9 @@ public class OldFoodFragment extends BaseFragment {
     @BindView(R.id.my_food_list)
     RecyclerView myFoodList;
 
-    private OldFoodAdapter mAdapter;
+    private SectionQuickAdapter mAdapter;
 
-    private List<OldFoodSectionEntity> entityList;
+    private List<MySectionEntity> entityList;
 
 
     public static OldFoodFragment newInstance() {
@@ -56,8 +60,6 @@ public class OldFoodFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_old_food, container, false);
 
         butterKnife(view);
-
-        mAdapter = new OldFoodAdapter(null);
 
         mDisposable.add(AppDatabase.getInstance().myFoodBookDao().findList()
                 .subscribeOn(Schedulers.io())
@@ -85,17 +87,29 @@ public class OldFoodFragment extends BaseFragment {
                     continue;
                 }
                 //头
-                entityList.add(new OldFoodSectionEntity(DateUtils.getFormatDateTime(DateUtils.valueOf(myFoodBook.getCreateTime()), DateUtils.ymd)));
+                entityList.add(new MySectionEntity(true,DateUtils.getFormatDateTime(DateUtils.valueOf(myFoodBook.getCreateTime()), DateUtils.ymd)));
                 //明细
                 for (FoodBook foodBook : foodBookList) {
-                    entityList.add(new OldFoodSectionEntity(new OldFoodSectionEntity.Item(foodBook)));
+                    entityList.add(new MySectionEntity(false,foodBook));
                 }
             }
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                            mAdapter.setNewData(entityList);
+                            mAdapter = new SectionQuickAdapter(R.layout.item_layout_foodbook_small,R.layout.item_food_head,entityList) {
+                                @Override
+                                public void reConvertHeader(BaseViewHolder helper, MySectionEntity item) {
+                                    helper.setText(R.id.tv_head,((String)item.getObject()));
+                                }
+
+                                @Override
+                                public void reConvertItem(BaseViewHolder helper, MySectionEntity item) {
+                                    helper.setText(R.id.food_title,((FoodBook)item.getObject()).getName());
+                                    helper.setText(R.id.food_introduction,((FoodBook)item.getObject()).getIntroduction());
+                                    Glide.with(mContext).load(((FoodBook)item.getObject()).getPicUrl()).apply(GlideUtil.getCrop()).into((ImageView) helper.getView(R.id.food_pic));
+                                }
+                            };
                             myFoodList.setAdapter(mAdapter);
                             myFoodList.setLayoutManager(new LinearLayoutManager(mContext));
                         },

@@ -97,7 +97,7 @@ dependencies {
     //内存
     implementation "com.snatik:storage:2.1.0"
     //万能分组神器
-    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34"
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.0-beta2"
     //权限
     implementation 'pub.devrel:easypermissions:1.2.0'
     //floo

@@ -15,6 +15,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/head_color"
-        android:textSize="20sp"
-        tools:text="记账" />
+        android:textSize="20sp"/>
 </LinearLayout>
