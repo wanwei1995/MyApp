@@ -129,22 +129,25 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
                     //解析数据
                     List<FoodBook> foodBookList = JacksonUtil.readValue(result.getMessage(), new TypeReference<List<FoodBook>>() {
                     });
-                    //从拉取数据中筛选出新数据
+                    //从拉取数据中筛选出远程新数据
                     List<FoodBook> foodBookListNew = getNewData(foodBooks, foodBookList);
+                    //从拉取数据中筛选出本地新数据
+                    List<FoodBook> foodBookListLocal = getNewData(foodBookList, foodBooks);
                     //将新数据保存
                     if (CollectionUtils.isNotEmpty(foodBookListNew)) {
                         save(foodBookListNew);
                     }
-                    //从拉取数据中筛选出新数据
-                    List<FoodBook> foodBookListLocal = getNewData(foodBookList, foodBooks);
-                    //如果本地也没有最新的数据则直接返回
-                    if(CollectionUtils.isEmpty(foodBookListLocal)){
-                        dwRefreshLayout.setRefresh(false);
-                        return;
+
+                    //如果本地没有最新的数据则直接返回
+                    if (CollectionUtils.isNotEmpty(foodBookListLocal)){
+                        //上传数据
+                        upLoad(foodBookListNew,foodBookListLocal);
                     }
-                    //上传数据
-                    upLoad(foodBookListNew, foodBookListLocal);
-                    dwRefreshLayout.setRefresh(false);
+
+                    //如果没有新数据则直接在此关闭刷新按钮 如果有新数据需要保存则此处不关闭，在保存数据后再关闭
+                    if (CollectionUtils.isEmpty(foodBookListNew)) {
+                        dwRefreshLayout.setRefresh(false);
+                    }
                 }
             } else if (WebDavService.upFoodBook_what == msg.what) {
                 if (result.isSuccess()) {
@@ -156,40 +159,69 @@ public class FoodBookFragment extends BaseFragment implements View.OnClickListen
         }
     };
 
-    private void upLoad(List<FoodBook> foodBookListNew, List<FoodBook> foodBookListLocal) {
+    private void upLoad(List<FoodBook> foodBookListNew,List<FoodBook> foodBookListLocal) {
         //上传数据之前将本地新数据图片同步到webDav上
         for (FoodBook foodBook : foodBookListLocal) {
             webDavService.upFoodBookPic(foodBook.getPicUrl());
         }
-        //将新旧数据合并传到网上去
-        foodBooks.addAll(foodBookListNew);
-        String info = JacksonUtil.toJSon(foodBooks);
+        //上传完整菜单
+        //合并数据
+        List<FoodBook> foodBookList = new ArrayList<>();
+        foodBookList.addAll(foodBooks);
+        foodBookList.addAll(foodBookListNew);
+        String info = JacksonUtil.toJSon(foodBookList);
         webDavService.upFoodBookInfo(info);
     }
 
     private void save(List<FoodBook> foodBookListNew) {
-        //将新数据的图片从webdav上下载到本地
-        for(FoodBook foodBook:foodBookListNew){
-            webDavService.downFoodBookPic(foodBook.getPicUrl());
-        }
 
         //将新数据存到数据库
         mDisposable.add(Completable.fromAction(() -> {
+            //将新数据的图片从webdav上下载到本地
+            for (FoodBook foodBook : foodBookListNew) {
+                webDavService.downFoodBookPic(foodBook.getPicUrl());
+            }
+            //刷新页面:图片下载后再重新刷新页面
+            //等待图片下载(在新线程中等待不会导致页面卡顿)
+            Thread.sleep(100 * foodBookListNew.size());
+            //判断图片是否下载完成
+            List<File> files = new ArrayList<>();
+            for (FoodBook foodBook : foodBookListNew) {
+                File file = new File(foodBook.getPicUrl());
+                if (!file.exists()) {
+                    files.add(file);
+                }
+            }
+            Boolean flag = false;
+            if (CollectionUtils.isNotEmpty(files)) {
+                flag = true;
+            }
+            //如果超过十次等待,还未成功则直接退出，等待人工处理
+            int k = 0;
+            while (flag && k < 100) {
+                int i = 0;
+                for (File file : files) {
+                    if (file.exists()) {
+                        i++;
+                    }
+                }
+                if (files.size() == i) {
+                    flag = false;
+                }
+                Thread.sleep(100);
+                k++;
+            }
+
             AppDatabase.getInstance().foodBookDao().insertList(foodBookListNew);
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                            //刷新页面:图片下载后再重新刷新页面
-                            File file = new File(foodBookListNew.get(foodBookListNew.size()-1).getPicUrl());
-                            while(file == null){
-                                Thread.sleep(100);
-                            }
-                            myLayoutAdapter.reLoad(foodBooks);
+                           //RxJava+Root 自带监控 数据更新后自带刷新
                             dwRefreshLayout.setRefresh(false);
                         },
                         throwable -> {
-                            Toast.makeText(mContext, "数据获取失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "数据获取失败" + throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }));
     }
 

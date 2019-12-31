@@ -170,12 +170,12 @@ public class WebDavService {
                 inputStream.close();
 
             } catch (Exception e) {
-                if (count == 1) {
+                if (count == 20) {
                     return;
                 }
                 count++;
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(100);
                     //失败则继续重试一次,再次失败则将其放入下载任务列表,等待手动重试
                     downFoodBookPic(url);
                 } catch (Exception e2) {
