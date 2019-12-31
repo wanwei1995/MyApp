@@ -136,14 +136,17 @@ public class WebDavService {
 
     }
 
+    private int count = 0;
+
     public void downFoodBookPic(String url) {
+
         new Thread(() -> {
             InputStream inputStream = null;
             OutputStream os = null;
             try {
                 //判断本地文件不存在再下载
                 File file = new File(url);
-                if(file!= null && file.exists()){
+                if (file != null && file.exists()) {
                     return;
                 }
                 //
@@ -152,6 +155,10 @@ public class WebDavService {
                 inputStream = WebDavUtil.downPic(WebDavUtil.PIC_PATH, fileName);
                 //
 
+                //如果目录不存在，则生成目录
+                if (!new File(FileUtil.getSystemUrl() + FileUtil.FOODBOOK).exists()) {
+                    FileUtil.createAppFolder(FileUtil.FOODBOOK);
+                }
 
                 os = new FileOutputStream(new File(url));
                 int bytesRead = 0;
@@ -163,7 +170,17 @@ public class WebDavService {
                 inputStream.close();
 
             } catch (Exception e) {
-                Log.e("","",e);
+                if (count == 1) {
+                    return;
+                }
+                count++;
+                try {
+                    Thread.sleep(2000);
+                    //失败则继续重试一次,再次失败则将其放入下载任务列表,等待手动重试
+                    downFoodBookPic(url);
+                } catch (Exception e2) {
+
+                }
             } finally {
                 try {
                     if (inputStream != null) {
