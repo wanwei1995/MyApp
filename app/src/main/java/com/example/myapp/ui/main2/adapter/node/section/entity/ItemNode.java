@@ -1,6 +1,5 @@
 package com.example.myapp.ui.main2.adapter.node.section.entity;
 
-import androidx.annotation.DrawableRes;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,20 +7,23 @@ import java.util.List;
 
 public class ItemNode extends BaseNode {
 
-    private int img;
+    private String img;
     private String name;
 
-    public ItemNode(@DrawableRes int img, String name) {
+    public ItemNode(String img, String name) {
         this.img = img;
         this.name = name;
     }
 
-    @DrawableRes
-    public int getImg() {
+    public ItemNode(String img) {
+        this.img = img;
+    }
+
+    public String getImg() {
         return img;
     }
 
-    public void setImg(@DrawableRes int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 

@@ -1,6 +1,7 @@
 package com.example.myapp.ui.main2.adapter.node.section;
 
 
+import android.content.Context;
 import com.chad.library.adapter.base.BaseNodeAdapter;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.example.myapp.ui.main2.adapter.node.section.entity.ItemNode;
@@ -15,10 +16,10 @@ import java.util.List;
 
 public class NodeSectionAdapter extends BaseNodeAdapter {
 
-    public NodeSectionAdapter() {
+    public NodeSectionAdapter(Context context) {
         super();
         addFullSpanNodeProvider(new RootNodeProvider());
-        addNodeProvider(new SecondNodeProvider());
+        addNodeProvider(new SecondNodeProvider(context));
         addFooterNodeProvider(new RootFooterNodeProvider());
     }
 
