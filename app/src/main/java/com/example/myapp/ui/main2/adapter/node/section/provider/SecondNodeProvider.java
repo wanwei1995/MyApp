@@ -1,15 +1,25 @@
 package com.example.myapp.ui.main2.adapter.node.section.provider;
 
+import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.chad.library.adapter.base.provider.BaseNodeProvider;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.R;
 import com.example.myapp.ui.main2.adapter.node.section.entity.ItemNode;
+import com.example.myapp.util.GlideUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SecondNodeProvider extends BaseNodeProvider {
+
+    private Context context;
+
+    public SecondNodeProvider(Context context){
+        this.context = context;
+    }
 
     @Override
     public int getItemViewType() {
@@ -27,8 +37,12 @@ public class SecondNodeProvider extends BaseNodeProvider {
             return;
         }
 
-        ItemNode entity = (ItemNode) data;
-        helper.setImageResource(R.id.iv, entity.getImg());
+        ItemNode itemNode = (ItemNode) data;
+
+        Glide.with(context)
+                .load(itemNode.getImg())
+                .apply(GlideUtil.getCrop())
+                .into((ImageView)helper.getView(R.id.iv));
     }
 
 

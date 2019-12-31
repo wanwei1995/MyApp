@@ -14,7 +14,7 @@
 
     <color name="success_stroke_color">#FAEEEE</color>
 
-
+    <color name="color_light_blue">#00DDB6</color>
 
     <color name="error">#D81B60</color>
     <color name="success">#03A9F4</color>
