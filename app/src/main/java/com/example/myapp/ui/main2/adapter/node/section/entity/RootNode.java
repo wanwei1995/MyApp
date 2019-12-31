@@ -41,6 +41,6 @@ public class RootNode extends BaseExpandNode implements NodeFooterImp {
     @Nullable
     @Override
     public BaseNode getFooterNode() {
-        return new RootFooterNode("");
+        return new RootFooterNode("显示更多...");
     }
 }

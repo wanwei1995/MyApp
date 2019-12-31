@@ -27,17 +27,6 @@
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
-
-        <TextView
-                android:id="@+id/more"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="right|center"
-                android:paddingRight="10dp"
-                android:text="隐藏 >"
-                android:textColor="@color/color_light_blue"
-                android:textSize="18sp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

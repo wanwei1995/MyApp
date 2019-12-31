@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.entity.node.BaseNode;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.myapp.BaseFragment;
 import com.example.myapp.R;
@@ -20,9 +18,6 @@ import com.example.myapp.datebase.entity.FoodBook;
 import com.example.myapp.datebase.entity.MyFoodBook;
 import com.example.myapp.ui.main2.adapter.MySectionEntity;
 import com.example.myapp.ui.main2.adapter.SectionQuickAdapter;
-import com.example.myapp.ui.main2.adapter.node.section.NodeSectionAdapter;
-import com.example.myapp.ui.main2.adapter.node.section.entity.ItemNode;
-import com.example.myapp.ui.main2.adapter.node.section.entity.RootNode;
 import com.example.myapp.ui.main2.dto.SettingDto;
 import com.example.myapp.util.CollectionUtils;
 import com.example.myapp.util.DateUtils;
@@ -45,7 +40,7 @@ public class OldFoodFragment extends BaseFragment {
 
     private SectionQuickAdapter mAdapter;
 
-    private List<BaseNode> entityList = new ArrayList<>();
+    private List<MySectionEntity> entityList;
 
 
     public static OldFoodFragment newInstance() {
@@ -92,30 +87,31 @@ public class OldFoodFragment extends BaseFragment {
                     continue;
                 }
                 //头
+                entityList.add(new MySectionEntity(true,DateUtils.getFormatDateTime(DateUtils.valueOf(myFoodBook.getCreateTime()), DateUtils.ymd)));
                 //明细
-                List<BaseNode> items = new ArrayList<>();
                 for (FoodBook foodBook : foodBookList) {
-                    items.add(new ItemNode(foodBook.getPicUrl()));
+                    entityList.add(new MySectionEntity(false,foodBook));
                 }
-                RootNode entity = new RootNode(items, DateUtils.getFormatDateTime(DateUtils.valueOf(myFoodBook.getCreateTime()), DateUtils.ymd));
-                entityList.add(entity);
             }
 
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
+                            mAdapter = new SectionQuickAdapter(R.layout.item_layout_foodbook_small,R.layout.item_food_head,entityList) {
+                                @Override
+                                public void reConvertHeader(BaseViewHolder helper, MySectionEntity item) {
+                                    helper.setText(R.id.tv_head,((String)item.getObject()));
+                                }
 
-                            myFoodList.setLayoutManager(new GridLayoutManager(mContext, 3));
-                            final NodeSectionAdapter nodeAdapter = new NodeSectionAdapter(mContext);
-                            // 顶部header
-                            View view = getLayoutInflater().inflate(R.layout.head_view, myFoodList, false);
-                            nodeAdapter.addHeaderView(view);
-
-                            myFoodList.setAdapter(nodeAdapter);
-
-                            nodeAdapter.setNewData(entityList);
-                            myFoodList.scheduleLayoutAnimation();
-
+                                @Override
+                                public void reConvertItem(BaseViewHolder helper, MySectionEntity item) {
+                                    helper.setText(R.id.food_title,((FoodBook)item.getObject()).getName());
+                                    helper.setText(R.id.food_introduction,((FoodBook)item.getObject()).getIntroduction());
+                                    Glide.with(mContext).load(((FoodBook)item.getObject()).getPicUrl()).apply(GlideUtil.getCrop()).into((ImageView) helper.getView(R.id.food_pic));
+                                }
+                            };
+                            myFoodList.setAdapter(mAdapter);
+                            myFoodList.setLayoutManager(new LinearLayoutManager(mContext));
                         },
                         throwable -> {
                             Toast.makeText(mContext, "新增数据失败", Toast.LENGTH_SHORT).show();
