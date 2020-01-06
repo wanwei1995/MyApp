@@ -57,7 +57,6 @@ public class BaseActivity extends AbstractActivity {
     }
 
 
-
     /**
      * 声音播放，【错误】
      */

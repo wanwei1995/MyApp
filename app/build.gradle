@@ -110,4 +110,7 @@ dependencies {
     implementation 'com.thegrizzlylabs.sardine-android:sardine-android:0.5'
     //apache工具包
     implementation 'commons-io:commons-io:2.6'
+    //快捷表格工具
+    implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+
 }
