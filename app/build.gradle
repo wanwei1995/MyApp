@@ -112,5 +112,5 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     //快捷表格工具
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'
-
+    implementation project(':lib-dialog')
 }

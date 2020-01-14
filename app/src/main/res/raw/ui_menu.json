@@ -69,5 +69,10 @@
     "name": "遮罩",
     "icon": "icon_tool",
     "activity": "ScratchActivity"
+  },
+  {
+    "name": "漂亮的弹框",
+    "icon": "icon_tool",
+    "activity": "SweetDialogActivity"
   }
 ]
